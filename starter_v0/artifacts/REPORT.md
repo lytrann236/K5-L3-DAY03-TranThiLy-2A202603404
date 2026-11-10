@@ -2,9 +2,16 @@
 
 ## Thông tin nhóm
 
-- Nhánh phát triển: `nguyenthuyduong`.
+- Team:TRANTHILY
 - Nhà cung cấp/model: Gemini / `gemini-3.5-flash`.
-- Thành viên nhóm: người nộp bài cần xác nhận và bổ sung.
+- **Thành viên nhóm:**
+
+  | STT | Họ và tên | Mã sinh viên |
+  |---|---|---|
+  | 1 | Trần Thị Lý | 2A202603404 |
+  | 2 | Nguyễn Thị Hương Giang | 2A202603538 |
+  | 3 | Nguyễn Thuỳ Dương | 2A202603388 |
+  | 4 | Nguyễn Quỳnh Trang | 2A202603477 |
 
 # PHẦN A — Giới thiệu agent
 
