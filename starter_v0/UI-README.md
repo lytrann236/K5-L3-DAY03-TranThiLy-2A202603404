@@ -27,15 +27,17 @@ Xem kết quả tool trong mục mở rộng. Transcript được lưu sau mỗi
 
 ## Link public
 
-Link đã kiểm tra: https://groups-teams-veterinary-citysearch.trycloudflare.com
+Link demo chính: https://tranthily-research-agent.vercel.app
 
-Công cụ cloudflared chính thức được đặt ngoài repo tại `E:\AI\labday3\tools\cloudflared.exe`. Để khởi động lại tunnel, mở terminal khác và chạy:
+Link Vercel không cần giữ máy local bật. Phần tunnel dưới đây chỉ là lựa chọn chạy Streamlit local, không phải cách duy trì link Vercel.
+
+Nếu đã cài `cloudflared`, có thể mở terminal khác để tạo tunnel cho Streamlit local:
 
 ```powershell
-E:\AI\labday3\tools\cloudflared.exe tunnel --url http://127.0.0.1:8501 --protocol http2 --no-autoupdate
+cloudflared tunnel --url http://127.0.0.1:8501 --protocol http2 --no-autoupdate
 ```
 
-Mỗi lần khởi động tunnel có thể nhận URL mới. Giữ Streamlit và tunnel chạy trong buổi demo; cập nhật link mới vào `artifacts/REPORT.md` và tài liệu này. Không commit `.env` hoặc API key.
+Tunnel local có thể nhận URL mới khi khởi động lại và cần giữ tiến trình chạy. Link demo chính trên Vercel không thay đổi theo tunnel. Không commit `.env` hoặc API key.
 
 ## Kiểm tra và bằng chứng
 
@@ -45,4 +47,4 @@ python -X utf8 run_eval.py --provider gemini --version v3-final --suite base --e
 python -X utf8 run_eval.py --provider gemini --version v3-final --suite group --eval-cases data/eval_group.json
 ```
 
-`scripts/finalize_report.py` dựng report từ log thật và ghi version log. Nếu tunnel đổi URL, cập nhật URL trong script trước khi dựng lại report. Kết quả eval và demo Gemini dùng API thật; unit test và kiểm tra UI tự động thông thường dùng dữ liệu giả lập.
+`scripts/finalize_report.py` dựng report từ log thật và dùng link Vercel trong biến `DEMO_URL`. Kết quả eval và demo Gemini dùng API thật; unit test và kiểm tra UI tự động thông thường dùng dữ liệu giả lập.

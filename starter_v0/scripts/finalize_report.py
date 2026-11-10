@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEMO_URL = "https://groups-teams-veterinary-citysearch.trycloudflare.com"
+DEMO_URL = "https://tranthily-research-agent.vercel.app"
 TEMPLATE_URL = "https://github.com/VinUni-AI20k/K5-L3-DAY03-ResearchAgentToolEval/blob/main/starter_v0/artifacts/REPORT.md"
 
 
@@ -82,7 +82,7 @@ Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng
 
 """
     text += f"**Link dùng thử (triển khai):** {DEMO_URL}\n\n"
-    text += """Đây là link tạm thời, phụ thuộc máy chủ Streamlit và tiến trình tunnel. Đã kiểm tra HTTP 200 và kết nối WebSocket khi triển khai; xem `UI-README.md` để khởi chạy lại.
+    text += """Link demo được triển khai trên Vercel, không cần giữ máy tính hoặc Cloudflare Tunnel bật. Bản Streamlit vẫn có thể chạy cục bộ theo hướng dẫn trong `UI-README.md`.
 
 ## A2. Tool agent có
 
@@ -193,7 +193,7 @@ Các bằng chứng bổ sung:
 |---|---|---|---|
 | send (Telegram) | `tests/test_tools_examples.py`, `tests/test_tools_todo.py` | Đã kiểm tra bằng HTTP giả lập việc không gửi khi thiếu xác nhận | Chưa có transcript gửi Telegram thật sau xác nhận; chưa nhận hoàn thành bonus này; UI không bật send |
 | arXiv/chính sách nội bộ | `tools/papers/`, `tools/paper_text/`, `tools/policy/`; test policy trong `tests/test_tools_todo.py` | Có tool và test tìm chính sách, lọc nội dung chỉ dẫn không đáng tin | Chưa có run demo arXiv thật được dẫn chứng trong báo cáo; không nhận hoàn thành bonus arXiv |
-| UI | `app.py`, `tests/test_streamlit_app.py`, `UI-README.md` và transcript ở B4 | Có chọn v1/v2/v3, lịch sử chat, xem tool, lưu/tải JSON; đã kiểm tra link public | Link phụ thuộc máy chủ và tunnel; v1/v2 là bản lịch sử |
+| UI | `app.py`, `tests/test_streamlit_app.py`, `UI-README.md` và transcript ở B4 | Có chọn v1/v2/v3, lịch sử chat, xem tool, lưu/tải JSON; có link demo Vercel | V1/v2 là bản lịch sử; link Vercel vẫn áp dụng hạn mức hosting và API |
 | Unit test tool | `artifacts/pytest-results.txt`, `tests/test_deduplicate.py`, `tests/test_stock_quote.py`, `tests/test_tools_todo.py` | Hoàn thành test TODO, không bỏ qua test; có test cho hai tool mới | Unit test dùng mạng giả lập; không thay thế kiểm tra API thật |
 
 """
@@ -216,7 +216,7 @@ Các bằng chứng bổ sung:
 
 **Hướng cải thiện tiếp theo:** bổ sung case kiểm tra nội dung và nguồn trích dẫn, thử thêm câu hỏi ngoài bộ eval, tạo link triển khai ổn định và kiểm tra xác nhận Telegram qua phiên demo riêng. Không sửa bộ base để nâng điểm.
 
-**Lưu ý nộp bài:** giữ máy chủ/tunnel chạy trong buổi demo và cập nhật URL nếu khởi động lại; không nộp .env hoặc API key. Người nộp tự đối chiếu thời hạn 16:30 theo lịch lớp; báo cáo không tự xác nhận tiêu chí thời gian này.
+**Lưu ý nộp bài:** link Vercel không phụ thuộc máy local, nhưng vẫn áp dụng hạn mức hosting và API. Không nộp .env hoặc API key. Người nộp tự đối chiếu thời hạn 16:30 theo lịch lớp; báo cáo không tự xác nhận tiêu chí thời gian này.
 
 ## B7. Thử thách model nhỏ chạy cục bộ (bonus)
 
