@@ -77,20 +77,20 @@ UI chỉ có v1, v2, v3. V1 và v2 dùng cấu hình lịch sử; v3 dùng bản
 
 ## A2. Các tool
 
-| Tool | Chức năng | Nguồn |
+| Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
-| clarify | Hỏi thông tin còn thiếu hoặc xin xác nhận | Có sẵn |
-| timeline | Lấy bài đăng gần đây của tài khoản X | Có sẵn |
-| social_search | Tìm bài đăng X theo chủ đề, Top hoặc Latest | Có sẵn |
-| lookup | Tìm web và tin tức theo khoảng thời gian | Có sẵn |
-| fetch | Đọc nội dung một URL | Có sẵn |
-| format | Trình bày dữ liệu đã có thành bản tin | Có sẵn |
-| send | Gửi Telegram khi có cấu hình và xác nhận; chỉ dùng qua CLI | Có sẵn |
-| policy | Tìm chính sách nội bộ | Có sẵn |
-| papers | Tìm bài báo arXiv | Có sẵn |
-| paper_text | Trích văn bản bài báo arXiv | Có sẵn |
-| deduplicate | Giữ bài đầu tiên cho mỗi URL trùng, giữ thứ tự | Nguyễn Thuỳ Dương bổ sung |
-| stock_quote | Trả dữ liệu cổ phiếu minh họa cố định cho AAPL, NVDA, VHM; không phải giá hiện tại | Nhóm bổ sung trên main |
+| clarify | Hỏi thông tin còn thiếu hoặc xin xác nhận | không |
+| timeline | Lấy bài đăng gần đây của tài khoản X | không |
+| social_search | Tìm bài đăng X theo chủ đề, Top hoặc Latest | không |
+| lookup | Tìm web và tin tức theo khoảng thời gian | không |
+| fetch | Đọc nội dung một URL | không |
+| format | Trình bày dữ liệu đã có thành bản tin | không |
+| send | Gửi Telegram khi có cấu hình và xác nhận; chỉ dùng qua CLI | không |
+| policy | Tìm chính sách nội bộ | không |
+| papers | Tìm bài báo arXiv | không |
+| paper_text | Trích văn bản bài báo arXiv | không |
+| deduplicate | Giữ bài đầu tiên cho mỗi URL trùng, giữ thứ tự | có |
+| stock_quote | Trả dữ liệu cổ phiếu minh họa cố định cho AAPL, NVDA, VHM; không phải giá hiện tại | có |
 
 ## A3. Câu hỏi mẫu
 
