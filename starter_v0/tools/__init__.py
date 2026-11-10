@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from tools.stock_quote.tool import stock_quote
 
 # Folder names are intentionally vague to match the tool names students see.
 # The imported function names are the underlying implementations (unchanged).
@@ -35,6 +36,7 @@ TOOL_FUNCTIONS = {
     "policy": search_company_policy,
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
+    "stock_quote": stock_quote
     # TODO(student): register your new tool here, e.g. "my_tool": my_tool_function,
     # then declare it in artifacts/tools.yaml and run `pytest tests/test_tool_contract.py`.
 }

@@ -13,65 +13,85 @@
 #   - Spell out arg conventions in parameter descriptions (handle format, topic/timeframe, search_type).
 #   - Make the `send` confirmation boundary explicit.
 #   - Declare your new tool(s) at the end of this file.
+# starter_v0 — tool declarations (Optimized for v2/v3 Routing & Arg Accuracy)
+
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: >-
+      Ask a clarifying question to the user when essential information or input arguments are missing.
+      WHEN TO USE: Use ONLY when a user request lacks a critical parameter (such as a missing screenname/handle for tweets, or a missing URL to read content) and you cannot proceed safely without guessing.
+      WHEN NOT TO USE: Do NOT use if all required parameters are provided or if the question is out of scope.
     parameters:
       type: object
       properties:
-        question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
-        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
+        question: {type: string, default: "", description: "The specific question to ask the user to clarify missing information."}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Format of the expected answer from user."}
+        options: {type: array, default: [], items: {type: string}, description: "List of choices if response_type is 'choice'."}
       required: [question]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: >-
+      Retrieve recent posts or tweets from a specific social account or user handle.
+      WHEN TO USE: Use when the user specifically requests recent tweets/posts from a named account (e.g., @sama, @elonmusk).
+      WHEN NOT TO USE: Do NOT use to search social posts by keywords or topics (use `social_search` instead). Do NOT use if no user handle/screenname is specified (call `clarify` first).
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        screenname: {type: string, default: "", description: "Twitter/X handle or username WITHOUT the '@' symbol (e.g., 'sama', 'elonmusk')."}
+        limit: {type: integer, default: 5, description: "Number of recent posts to fetch."}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: >-
+      Search social media posts or tweets by keywords, topics, or hashtags.
+      WHEN TO USE: Use when searching for recent posts/tweets matching general keywords, topics, or trends across social media.
+      WHEN NOT TO USE: Do NOT use when fetching timeline posts of a specific user handle (use `timeline` instead). Do NOT use for general web search (use `lookup` instead).
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cách sắp xếp"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        query: {type: string, default: "", description: "Keyword or query string to search for."}
+        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Sort order: 'Latest' for recent posts or 'Top' for popular posts."}
+        limit: {type: integer, default: 5, description: "Maximum number of posts to return."}
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: >-
+      Perform a web search for general information or online news articles.
+      WHEN TO USE: Use when searching the web for information, current news, facts, or articles. Set `topic="news"` when searching specifically for recent news items.
+      WHEN NOT TO USE: Do NOT use to search social media posts or tweets (use `social_search` instead). Do NOT use to fetch full contents of a specific URL (use `fetch` instead).
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
-        max_results: {type: integer, default: 5, description: "Số kết quả"}
+        query: {type: string, default: "", description: "Search query string."}
+        topic: {type: string, enum: [general, news], default: "general", description: "Search topic category: set to 'news' for current news searches, otherwise 'general'."}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Time range filter for search results."}
+        max_results: {type: integer, default: 5, description: "Maximum number of search results."}
       required: [query]
 
   - name: fetch
-    description: "Lấy nội dung từ một địa chỉ."
+    description: >-
+      Fetch and extract the full Markdown content from a specific web URL.
+      WHEN TO USE: Use when the user explicitly provides a full web URL (http:// or https://) to read, summarize, or extract text from.
+      WHEN NOT TO USE: Do NOT use if no explicit URL is provided in the request (call `clarify` instead). Do NOT use for general web searching (use `lookup` instead).
     parameters:
       type: object
       properties:
-        url: {type: string, default: "", description: "Địa chỉ"}
+        url: {type: string, default: "", description: "Complete URL starting with http:// or https://."}
       required: [url]
 
   - name: format
-    description: "Trình bày dữ liệu đã có thành văn bản."
+    description: >-
+      Format a structured list of collected research items into a clean Markdown digest or summary.
+      WHEN TO USE: Use to compile and format already retrieved research items into markdown lists, sections, or daily briefs.
+      WHEN NOT TO USE: Do NOT use to search or fetch data from external networks.
     parameters:
       type: object
       properties:
         items:
           type: array
           default: []
-          description: "Danh sách item"
+          description: "List of research items to format."
           items:
             type: object
             properties:
@@ -80,46 +100,69 @@ tools:
               source: {type: string}
               summary: {type: string}
               section: {type: string}
-        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn"}
-        headline: {type: string, default: "", description: "Tiêu đề"}
+        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Formatting template."}
+        headline: {type: string, default: "", description: "Digest title or header text."}
       required: [items, template]
 
   # ---------------- Bonus tools ----------------
   - name: send
-    description: "Gửi một đoạn văn bản đi."
+    description: >-
+      Publish or send a text message to a Telegram channel.
+      WHEN TO USE: Use ONLY when the user explicitly requests to send/post a message AND has provided explicit confirmation (`confirmed=true`).
+      WHEN NOT TO USE: NEVER invoke if `confirmed` is false or missing, or if user hasn't explicitly consented to sending.
     parameters:
       type: object
       properties:
-        text: {type: string, default: "", description: "Nội dung"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
+        text: {type: string, default: "", description: "Text content to be published/sent."}
+        confirmed: {type: boolean, default: false, description: "Safety flag: MUST be explicitly set to true by user consent before sending."}
       required: [text]
 
   - name: policy
-    description: "Tìm trong tài liệu nội bộ."
+    description: >-
+      Search internal company compliance and AI usage policy documents.
+      WHEN TO USE: Use when answering questions about internal guidelines, data privacy, AI research standards, or citation policies.
+      WHEN NOT TO USE: Do NOT use for public web search or external academic papers.
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Nhóm"}
-        top_k: {type: integer, default: 3, description: "Số mục"}
+        query: {type: string, default: "", description: "Policy search query."}
+        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Specific policy domain filter."}
+        top_k: {type: integer, default: 3, description: "Maximum number of policy passages."}
       required: [query]
 
   - name: papers
-    description: "Tìm bài báo khoa học."
+    description: >-
+      Search academic scientific papers on arXiv.
+      WHEN TO USE: Use when searching for academic research papers, preprint literature, or arXiv studies by topic/author.
+      WHEN NOT TO USE: Do NOT use for general web news (use `lookup`) or social media posts (use `social_search`).
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        max_results: {type: integer, default: 5, description: "Số lượng"}
-        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
+        query: {type: string, default: "", description: "Academic search query or paper topic."}
+        max_results: {type: integer, default: 5, description: "Maximum number of paper metadata results."}
+        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sort criteria."}
       required: [query]
 
   - name: paper_text
-    description: "Lấy nội dung text của một bài báo."
+    description: >-
+      Download and extract full text content from an arXiv paper PDF.
+      WHEN TO USE: Use when analyzing or reading the full text of a specific arXiv paper given its arXiv ID or URL.
+      WHEN NOT TO USE: Do NOT use for general website URLs (use `fetch` instead).
     parameters:
       type: object
       properties:
-        arxiv_url: {type: string, default: "", description: "ID hoặc địa chỉ"}
-        max_pages: {type: integer, default: 5, description: "Số trang"}
-        max_chars: {type: integer, default: 8000, description: "Số ký tự"}
+        arxiv_url: {type: string, default: "", description: "arXiv ID (e.g., '2301.12345') or full arXiv URL."}
+        max_pages: {type: integer, default: 5, description: "Maximum number of PDF pages to extract."}
+        max_chars: {type: integer, default: 8000, description: "Character limit for extracted text."}
       required: [arxiv_url]
+
+  - name: stock_quote
+    description: >-
+      Fetch current market price and quote data for a stock ticker symbol.
+      WHEN TO USE: Use when the user specifically asks for stock prices, market quotes, or ticker data (e.g., AAPL, NVDA, VHM).
+      WHEN NOT TO USE: Do NOT use for general company news or web searching.
+    parameters:
+      type: object
+      properties:
+        symbol: {type: string, default: "", description: "Stock ticker symbol (e.g., AAPL, NVDA)."}
+      required: [symbol]

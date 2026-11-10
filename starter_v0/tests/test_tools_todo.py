@@ -120,3 +120,20 @@ def test_my_new_tool_bad_input_from_model() -> None:
 
 def test_my_new_tool_failure_returns_error_dict() -> None:
     pytest.skip(TODO)
+
+def test_stock_quote_happy_path():
+    from tools.stock_quote.tool import stock_quote
+    res = stock_quote(symbol="AAPL")
+    assert res["status"] == "success"
+    assert res["symbol"] == "AAPL"
+
+def test_stock_quote_empty_symbol():
+    from tools.stock_quote.tool import stock_quote
+    res = stock_quote(symbol="")
+    assert "error" in res
+
+def test_stock_quote_lowercase_input():
+    from tools.stock_quote.tool import stock_quote
+    res = stock_quote(symbol="nvda")
+    assert res["symbol"] == "NVDA"
+    
