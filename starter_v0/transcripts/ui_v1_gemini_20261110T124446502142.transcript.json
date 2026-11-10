@@ -1,0 +1,168 @@
+{
+  "transcript_id": "ui_v1_gemini_20261110T124446502142",
+  "version": "v1",
+  "artifact_version": "v1+p1b2f139d2f2b+t5b22a2476d41",
+  "prompt_hash": "1b2f139d2f2b07165455186d68661d9d17f8843ce640535b789462cb8f750d48",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "created_at": "2026-11-10T12:44:46",
+  "system_prompt": "E:\\AI\\labday3\\K5-L3-DAY03-TranThiLy-2A202603404\\starter_v0\\artifacts\\versions\\v1\\system_prompt.md",
+  "tools": "E:\\AI\\labday3\\K5-L3-DAY03-TranThiLy-2A202603404\\starter_v0\\artifacts\\versions\\v1\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "turns": [
+    {
+      "turn_index": 1,
+      "user": "thời tiết hôm nay",
+      "started_at": "2026-11-10T12:50:35",
+      "model": "gemini-3.5-flash",
+      "enabled_tools": [
+        "clarify",
+        "timeline",
+        "social_search",
+        "lookup",
+        "fetch",
+        "format",
+        "policy",
+        "papers",
+        "paper_text"
+      ],
+      "status": "answered",
+      "assistant_text": "Dưới đây là thông tin dự báo thời tiết hôm nay trên cả nước:\n\n* **Bắc Bộ (Hà Nội, Hải Phòng,...):** Nhiệt độ phổ biến từ **26°C – 30°C** (cảm giác thực tế khoảng 33°C – 34°C). Đêm và sáng có mây, khả năng xuất hiện mưa rào và dông rải rác, cục bộ có nơi mưa vừa/mưa to [[1](https://thoitiet.vn/hom-nay), [3](https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi)].\n* **Trung Bộ (Đà Nẵng, Huế, Quảng Trị,...):** Nhiệt độ dao động từ **21°C – 28°C**. Dự báo có mưa rào, nhiều nơi mưa vừa đến mưa to diện rộng [[2](https://xemthoitiet.vn), [3](https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi)].\n* **Nam Bộ (TP. Hồ Chí Minh, Cần Thơ, Cà Mau,...):** Nhiệt độ từ **28°C – 31°C** (cảm giác oi nóng khoảng 34°C – 37°C). Ngày nắng, có mây rải rác, chiều tối và đêm có mưa rào/mưa nhẹ rải rác một số nơi [[1](https://thoitiet.vn/hom-nay), [2](https://xemthoitiet.vn), [3](https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi)].",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "lookup",
+              "args": {
+                "max_results": 5,
+                "query": "thời tiết hôm nay Việt Nam",
+                "timeframe": "day",
+                "topic": "general"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "lookup",
+              "args": {
+                "max_results": 5,
+                "query": "thời tiết hôm nay Việt Nam",
+                "timeframe": "day",
+                "topic": "general"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "thời tiết hôm nay Việt Nam",
+                "topic": "general",
+                "timeframe": "day",
+                "items": [
+                  {
+                    "title": "Dự báo thời tiết hôm nay của 63 tỉnh - thành phố ở Việt Nam",
+                    "url": "https://thoitiet.vn/hom-nay",
+                    "source": "thoitiet.vn",
+                    "summary": "Thành phố của bạn:   Hà Nội   Thay đổi\n\nGiờ địa phương:  13:35 | 07/11/2026\n\n# Dự báo thời tiết hôm nay các Tỉnh/Thành phố\n\nMưa nhẹ\n\n###### Hà Nội\n\nMưa nhẹ\n\n### 29.7°C\n\n cảm thấy như  34.1°C Nhiều my\n\n###### Hà Giang\n\nNhiều my\n\n### 25.5°C\n\n cảm thấy như  25.7°C Nhiều my\n\n###### Cao Bằng\n\nNhiều my\n\n### 27.2°C\n\n cảm thấy như  29.8°C Mưa vừa\n\n###### Bắc Kạn\n\nMưa vừa\n\n### 25.8°C\n\n cảm thấy như  26.2°C Mưa nhẹ\n\n###### Tuyên Quang\n\nMưa nhẹ\n\n### 26.5°C\n\n cảm thấy như  26.1°C Nhiều my\n\n###### Lào Cai [...] ###### Bạc Liêu\n\nMưa nhẹ\n\n### 31.3°C\n\n cảm thấy như  37.2°C Mưa nhẹ\n\n###### Cà Mau\n\nMưa nhẹ\n\n### 31.1°C\n\n cảm thấy như  37.4°C\n\nHà Nội\n\nĐã cập nhật 26 phút trước\n\nMưa nhẹ 29.8°\n\nC\n\nF\n\nMưa nhẹ\n\nCảm giác như 34.8°.\n\n### Dự báo những ngày tới\n\nHôm nay Ngày mai 3 ngày 5 ngày\n\n7 ngày 10 ngày 15 ngày 30 ngày\n\n###### Mặt trời mọc/lặn\n\n06:02  17:18\n\n###### Thấp/Cao\n\n###### Độ ẩm\n\n###### Áp suất\n\n### 1016 mb\n\n###### Tầm nhìn\n\n### 10 km\n\n### 3.96 km/giờ\n\n###### Điểm ngưng\n\n### 23.9 °C [...] ###### Hải Phòng\n\nNhiều my\n\n### 29.9°C\n\n cảm thấy như  32.3°C Mưa nhẹ\n\n###### Hưng Yên\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C Nhiều my\n\n###### Thái Bình\n\nNhiều my\n\n### 29.5°C\n\n cảm thấy như  33.7°C Nhiều my\n\n###### Hà Nam\n\nNhiều my\n\n### 29°C\n\n cảm thấy như  33.4°C Nhiều my\n\n###### Nam Định\n\nNhiều my\n\n### 30.9°C\n\n cảm thấy như  33.6°C Mưa nhẹ\n\n###### Ninh Bình\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  32.7°C Mưa nhẹ\n\n###### Thanh Hóa\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C My cụm",
+                    "score": 0.80625874
+                  },
+                  {
+                    "title": "Dự báo thời tiết Việt Nam chính xác nhất - Xem Thời Tiết",
+                    "url": "https://xemthoitiet.vn",
+                    "source": "xemthoitiet.vn",
+                    "summary": "# Dự báo thời tiết Việt Nam chính xác nhất – Xem Thời Tiết\n\n## Thời tiết Đà Nẵng\n\nicon 28°\n\nBầu trời quang đãng Cảm giác như 32°\n\nicon\n\nThấp/Cao\n\n28°/28°\n\nicon\n\nĐộ ẩm\n\n82%\n\nicon\n\nÁp suất\n\n1017 hPa\n\nicon\n\nTầm nhìn\n\n10 km\n\nicon\n\nGió\n\n1.06 km/h\n\nicon\n\nUV\n\n8.58\n\nHôm nay\n\nthời tiết\n\nNhiệt độ\n\n77 %\n\nMưa nhẹ\n\n30° / 27°\n\nT2 09/11\n\nthời tiết\n\nNhiệt độ\n\n83 %\n\nMưa cường độ nặng\n\n30° / 26°\n\nT3 10/11\n\nthời tiết\n\nNhiệt độ\n\n87 %\n\nMưa vừa\n\n24° / 24°\n\n### Thời tiết nổi bật\n\nHà Nội\n\nthời tiết\n\nNhiệt độ\n\n80 % [...] Bỏ qua nội dung\n\nXem dự báo thời tiết hôm nay và ngày maiXem dự báo thời tiết hôm nay và ngày mai\n\n Giờ địa phương:    19 : 30 : 22   17 / 6 / 2024\n\n Tỉnh/Thành phố\n\n  Đông Bắc Bộ\n\n  Hà Giang\n\n  Cao Bằng\n\n  Bắc Kạn\n\n  Tuyên Quang\n\n  Thái Nguyên\n\n  Lạng Sơn\n\n  Quảng Ninh\n\n  Bắc Giang\n\n  Phú Thọ\n\n  Ty Bắc Bộ\n\n  Lào Cai\n\n  Điện Biên\n\n  Lai Chu\n\n  Sơn La\n\n  Yên Bái\n\n  Hòa Bình\n\n  Đồng bằng sông Hồng\n\n  Hà Nội\n\n  Vĩnh Phúc\n\n  Bắc Ninh\n\n  Hải Dương\n\n  Hải Phòng\n\n  Hưng Yên\n\n  Thái Bình\n\n  Hà Nam [...] Nhiệt độ\n\n80 %\n\nMưa nhẹ\n\n26° / 26°\n\nĐà Nẵng\n\nthời tiết\n\nNhiệt độ\n\n82 %\n\nBầu trời quang đãng\n\n28° / 28°\n\nHồ Chí Minh\n\nthời tiết\n\nNhiệt độ\n\n85 %\n\nMy cụm\n\n29° / 29°\n\nHải Phòng\n\nthời tiết\n\nNhiệt độ\n\n80 %\n\nMy thưa\n\n27° / 27°\n\nCần Thơ\n\nthời tiết\n\nNhiệt độ\n\n85 %\n\nMy thưa\n\n28° / 28°\n\nHải Dương\n\nthời tiết\n\nNhiệt độ\n\n79 %\n\nMy rải rác\n\n26° / 26°\n\nThừa Thiên Huế\n\nthời tiết\n\nNhiệt độ\n\n87 %\n\nMy thưa\n\n29° / 29°\n\nBình Dương\n\nthời tiết\n\nNhiệt độ\n\n86 %\n\nMy rải rác\n\n28° / 28°\n\nCà Mau\n\nthời tiết\n\nNhiệt độ\n\n85 %",
+                    "score": 0.7869018
+                  },
+                  {
+                    "title": "Latest weather forecast for tonight and tomorrow 11/10 | Latest weather forecast today #weather",
+                    "url": "https://www.youtube.com/watch?v=JNcG1hZn8kg",
+                    "source": "youtube.com",
+                    "summary": "# Latest weather forecast for tonight and tomorrow 11/10 | Latest weather forecast today #weather\n## Channel: Báo Nhân Dân (verified)\n3.79M subscribers\n\n### Description\n123,594 views\nLatest weather forecast for tonight and tomorrow, November 10th:\n\nNorthern Vietnam: Rain will decrease rapidly, cold weather will continue.\n\nCentral Vietnam: Heavy and prolonged rain, many areas at risk of flooding, flash floods, and landslides. [...] Southern Vietnam: Scattered rain in the Eastern Highlands, little rain in Southern Vietnam.\n\nWebsite: \nWe invite you to watch the most prominent news on politics, economics, culture, social life, both domestically and internationally; the latest daily weather forecast, and many other interesting information updated quickly and accurately from Nhan Dan Newspaper. [...] [3:09] tục duy trì trên nhiều địa phương, đang chú ý là từ Huế, Đà Nẵng đến phía Đông, Quảng Ngãi và Gia Lai. Lượng mưa từ đêm\n[3:16] nay đến ngày 11 tháng 11 phổ biến trong khoảng từ 150 cho đến 300 mm, cục bộ\n[3:23] trên 500 mm. Phía Nam Quảng Trị, phía Đông Đắc Lắc và Khánh Hòa thì cũng có nguy cơ mưa rất to. Nhiệt độ cao nhất tại Quảng Trị đến Huế là từ 21 cho đến 24 độ. Còn phía Nam có nơi trên 24 độ.",
+                    "score": 0.78473216
+                  },
+                  {
+                    "title": "Thời tiết TP. Hồ Chí Minh - Dự báo thời tiết hôm nay, ngày mai và 7 ngày tới",
+                    "url": "https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi",
+                    "source": "baomoi.com",
+                    "summary": "### Dự báo thời tiết hôm nay và ngày mai (7/11): Bắc Bộ đêm và sáng mưa rào, dông rải rác, cục bộ mưa to; các khu vực khác mưa vài nơi: Bắc Bộ đêm và sáng mưa rào, dông rải rác, cục bộ mưa to; các khu vực khác mưa vài nơi\")\n\nBáo Thế Giới & Việt Nam\n\nKhu vực Bắc Bộ đêm và sáng mưa rào, dông rải rác, cục bộ mưa to. Trung Bộ và Nam Bộ có mây, mưa rào, dông vài nơi.\n\nDự báo thời tiết hôm nay và ngày mai (6/11): Bắc Bộ mưa rào và dông rải rác, chiều tối cục bộ mưa to; phía Nam ngày nắng [...] Báo Tin Tức TTXVN\n\nNgày 5/11, cả nước phổ biến ngày nắng, chiều tối và đêm xuất hiện mưa rào, dông vài nơi. Hà Nội và các tỉnh Bắc Bộ duy trì nền nhiệt cao nhất từ 29-32 độ C, trong khi Nam Bộ có nơi đạt 34 độ C. Người dân cần đề phòng lốc, sét và gió giật mạnh.\n\nThời tiết hôm nay 5.11: Cả nước ngày nắng, đêm mưa dông vài nơi\n\n### Thời tiết hôm nay 5.11: Cả nước ngày nắng, đêm mưa dông vài nơi\n\nBáo Văn hóa [...] ### Dự báo thời tiết hôm nay và ngày mai (5/11): Các khu vực đêm mưa rào và dông vài nơi, ngày nắng: Các khu vực đêm mưa rào và dông vài nơi, ngày nắng\")\n\nBáo Thế Giới & Việt Nam\n\nCác khu vực có mây, đêm 4/11 mưa rào và dông vài nơi, ngày 5/11 nắng. Phía Bắc gió nhẹ, phía Nam gió cấp 2-3.\n\nThời tiết hôm nay 6/11: Hà Nội mưa dông, Bắc bộ có nơi mưa to\n\n### Thời tiết hôm nay 6/11: Hà Nội mưa dông, Bắc bộ có nơi mưa to\n\nChuyên Trang Doanh nhân & Công lý - Báo Công Lý",
+                    "score": 0.7447496
+                  },
+                  {
+                    "title": "Thời tiết – dự báo thời tiết hôm nay và ngày mai - Tuổi Trẻ Online",
+                    "url": "https://tuoitre.vn/thoi-tiet.htm",
+                    "source": "tuoitre.vn",
+                    "summary": "Email: tto@tuoitre.com.vn\n Hotline: 0918.033.133\n\nThời tiết hôm nay 4-11: Bắc Bộ, Nam Bộ ngày nắng, chiều tối có nơi mưa rào \n\n### Thời tiết hôm nay 4-11: Bắc Bộ, Nam Bộ ngày nắng, chiều tối có nơi mưa rào\n\nThời tiết\n\nHôm nay 4-11, thời tiết cả nước khá ổn định, ban ngày trời nắng, về chiều tối một vài nơi mưa rào kèm dông.\n\nMiền Bắc sắp chuyển lạnh sau khi trải qua tháng 10 nóng kỷ lục 65 năm \n\n### Miền Bắc sắp chuyển lạnh sau khi trải qua tháng 10 nóng kỷ lục 65 năm\n\nThời tiết [...] Thời tiết\n\nDự báo khoảng từ đêm 5-11 đến cuối tuần này, miền Bắc khả năng đón hai đợt không khí lạnh liên tiếp gy mưa rào và dông rải rác, có nơi mưa to. Từ đầu tuần sau, miền Bắc chuyển lạnh, vùng núi trời rét.\n\nChưa vào mùa khô mưa đã hụt, lượng mưa tháng 11 năm nay ở miền Nam ra sao? \n\n### Chưa vào mùa khô mưa đã hụt, lượng mưa tháng 11 năm nay ở miền Nam ra sao?\n\nThời tiết [...] Thời tiết\n\nThời tiết đêm 1 ngày 2-11: Nam Bộ và Trung Bộ trời nhiều my, có mưa rào và dông rải rác, đề phòng mưa to cục bộ. Bắc Bộ mưa vài nơi, sáng sớm có sương mù...\n\nThời tiết ngày và đêm 31-10: Bắc Bộ ngày nắng, Trung và Nam Bộ đón mưa dông diện rộng \n\n### Thời tiết ngày và đêm 31-10: Bắc Bộ ngày nắng, Trung và Nam Bộ đón mưa dông diện rộng\n\nThời tiết",
+                    "score": 0.6932451
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Dưới đây là thông tin dự báo thời tiết hôm nay trên cả nước:\n\n* **Bắc Bộ (Hà Nội, Hải Phòng,...):** Nhiệt độ phổ biến từ **26°C – 30°C** (cảm giác thực tế khoảng 33°C – 34°C). Đêm và sáng có mây, khả năng xuất hiện mưa rào và dông rải rác, cục bộ có nơi mưa vừa/mưa to [[1](https://thoitiet.vn/hom-nay), [3](https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi)].\n* **Trung Bộ (Đà Nẵng, Huế, Quảng Trị,...):** Nhiệt độ dao động từ **21°C – 28°C**. Dự báo có mưa rào, nhiều nơi mưa vừa đến mưa to diện rộng [[2](https://xemthoitiet.vn), [3](https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi)].\n* **Nam Bộ (TP. Hồ Chí Minh, Cần Thơ, Cà Mau,...):** Nhiệt độ từ **28°C – 31°C** (cảm giác oi nóng khoảng 34°C – 37°C). Ngày nắng, có mây rải rác, chiều tối và đêm có mưa rào/mưa nhẹ rải rác một số nơi [[1](https://thoitiet.vn/hom-nay), [2](https://xemthoitiet.vn), [3](https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi)].",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "lookup",
+          "args": {
+            "max_results": 5,
+            "query": "thời tiết hôm nay Việt Nam",
+            "timeframe": "day",
+            "topic": "general"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "thời tiết hôm nay Việt Nam",
+            "topic": "general",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Dự báo thời tiết hôm nay của 63 tỉnh - thành phố ở Việt Nam",
+                "url": "https://thoitiet.vn/hom-nay",
+                "source": "thoitiet.vn",
+                "summary": "Thành phố của bạn:   Hà Nội   Thay đổi\n\nGiờ địa phương:  13:35 | 07/11/2026\n\n# Dự báo thời tiết hôm nay các Tỉnh/Thành phố\n\nMưa nhẹ\n\n###### Hà Nội\n\nMưa nhẹ\n\n### 29.7°C\n\n cảm thấy như  34.1°C Nhiều my\n\n###### Hà Giang\n\nNhiều my\n\n### 25.5°C\n\n cảm thấy như  25.7°C Nhiều my\n\n###### Cao Bằng\n\nNhiều my\n\n### 27.2°C\n\n cảm thấy như  29.8°C Mưa vừa\n\n###### Bắc Kạn\n\nMưa vừa\n\n### 25.8°C\n\n cảm thấy như  26.2°C Mưa nhẹ\n\n###### Tuyên Quang\n\nMưa nhẹ\n\n### 26.5°C\n\n cảm thấy như  26.1°C Nhiều my\n\n###### Lào Cai [...] ###### Bạc Liêu\n\nMưa nhẹ\n\n### 31.3°C\n\n cảm thấy như  37.2°C Mưa nhẹ\n\n###### Cà Mau\n\nMưa nhẹ\n\n### 31.1°C\n\n cảm thấy như  37.4°C\n\nHà Nội\n\nĐã cập nhật 26 phút trước\n\nMưa nhẹ 29.8°\n\nC\n\nF\n\nMưa nhẹ\n\nCảm giác như 34.8°.\n\n### Dự báo những ngày tới\n\nHôm nay Ngày mai 3 ngày 5 ngày\n\n7 ngày 10 ngày 15 ngày 30 ngày\n\n###### Mặt trời mọc/lặn\n\n06:02  17:18\n\n###### Thấp/Cao\n\n###### Độ ẩm\n\n###### Áp suất\n\n### 1016 mb\n\n###### Tầm nhìn\n\n### 10 km\n\n### 3.96 km/giờ\n\n###### Điểm ngưng\n\n### 23.9 °C [...] ###### Hải Phòng\n\nNhiều my\n\n### 29.9°C\n\n cảm thấy như  32.3°C Mưa nhẹ\n\n###### Hưng Yên\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C Nhiều my\n\n###### Thái Bình\n\nNhiều my\n\n### 29.5°C\n\n cảm thấy như  33.7°C Nhiều my\n\n###### Hà Nam\n\nNhiều my\n\n### 29°C\n\n cảm thấy như  33.4°C Nhiều my\n\n###### Nam Định\n\nNhiều my\n\n### 30.9°C\n\n cảm thấy như  33.6°C Mưa nhẹ\n\n###### Ninh Bình\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  32.7°C Mưa nhẹ\n\n###### Thanh Hóa\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C My cụm",
+                "score": 0.80625874
+              },
+              {
+                "title": "Dự báo thời tiết Việt Nam chính xác nhất - Xem Thời Tiết",
+                "url": "https://xemthoitiet.vn",
+                "source": "xemthoitiet.vn",
+                "summary": "# Dự báo thời tiết Việt Nam chính xác nhất – Xem Thời Tiết\n\n## Thời tiết Đà Nẵng\n\nicon 28°\n\nBầu trời quang đãng Cảm giác như 32°\n\nicon\n\nThấp/Cao\n\n28°/28°\n\nicon\n\nĐộ ẩm\n\n82%\n\nicon\n\nÁp suất\n\n1017 hPa\n\nicon\n\nTầm nhìn\n\n10 km\n\nicon\n\nGió\n\n1.06 km/h\n\nicon\n\nUV\n\n8.58\n\nHôm nay\n\nthời tiết\n\nNhiệt độ\n\n77 %\n\nMưa nhẹ\n\n30° / 27°\n\nT2 09/11\n\nthời tiết\n\nNhiệt độ\n\n83 %\n\nMưa cường độ nặng\n\n30° / 26°\n\nT3 10/11\n\nthời tiết\n\nNhiệt độ\n\n87 %\n\nMưa vừa\n\n24° / 24°\n\n### Thời tiết nổi bật\n\nHà Nội\n\nthời tiết\n\nNhiệt độ\n\n80 % [...] Bỏ qua nội dung\n\nXem dự báo thời tiết hôm nay và ngày maiXem dự báo thời tiết hôm nay và ngày mai\n\n Giờ địa phương:    19 : 30 : 22   17 / 6 / 2024\n\n Tỉnh/Thành phố\n\n  Đông Bắc Bộ\n\n  Hà Giang\n\n  Cao Bằng\n\n  Bắc Kạn\n\n  Tuyên Quang\n\n  Thái Nguyên\n\n  Lạng Sơn\n\n  Quảng Ninh\n\n  Bắc Giang\n\n  Phú Thọ\n\n  Ty Bắc Bộ\n\n  Lào Cai\n\n  Điện Biên\n\n  Lai Chu\n\n  Sơn La\n\n  Yên Bái\n\n  Hòa Bình\n\n  Đồng bằng sông Hồng\n\n  Hà Nội\n\n  Vĩnh Phúc\n\n  Bắc Ninh\n\n  Hải Dương\n\n  Hải Phòng\n\n  Hưng Yên\n\n  Thái Bình\n\n  Hà Nam [...] Nhiệt độ\n\n80 %\n\nMưa nhẹ\n\n26° / 26°\n\nĐà Nẵng\n\nthời tiết\n\nNhiệt độ\n\n82 %\n\nBầu trời quang đãng\n\n28° / 28°\n\nHồ Chí Minh\n\nthời tiết\n\nNhiệt độ\n\n85 %\n\nMy cụm\n\n29° / 29°\n\nHải Phòng\n\nthời tiết\n\nNhiệt độ\n\n80 %\n\nMy thưa\n\n27° / 27°\n\nCần Thơ\n\nthời tiết\n\nNhiệt độ\n\n85 %\n\nMy thưa\n\n28° / 28°\n\nHải Dương\n\nthời tiết\n\nNhiệt độ\n\n79 %\n\nMy rải rác\n\n26° / 26°\n\nThừa Thiên Huế\n\nthời tiết\n\nNhiệt độ\n\n87 %\n\nMy thưa\n\n29° / 29°\n\nBình Dương\n\nthời tiết\n\nNhiệt độ\n\n86 %\n\nMy rải rác\n\n28° / 28°\n\nCà Mau\n\nthời tiết\n\nNhiệt độ\n\n85 %",
+                "score": 0.7869018
+              },
+              {
+                "title": "Latest weather forecast for tonight and tomorrow 11/10 | Latest weather forecast today #weather",
+                "url": "https://www.youtube.com/watch?v=JNcG1hZn8kg",
+                "source": "youtube.com",
+                "summary": "# Latest weather forecast for tonight and tomorrow 11/10 | Latest weather forecast today #weather\n## Channel: Báo Nhân Dân (verified)\n3.79M subscribers\n\n### Description\n123,594 views\nLatest weather forecast for tonight and tomorrow, November 10th:\n\nNorthern Vietnam: Rain will decrease rapidly, cold weather will continue.\n\nCentral Vietnam: Heavy and prolonged rain, many areas at risk of flooding, flash floods, and landslides. [...] Southern Vietnam: Scattered rain in the Eastern Highlands, little rain in Southern Vietnam.\n\nWebsite: \nWe invite you to watch the most prominent news on politics, economics, culture, social life, both domestically and internationally; the latest daily weather forecast, and many other interesting information updated quickly and accurately from Nhan Dan Newspaper. [...] [3:09] tục duy trì trên nhiều địa phương, đang chú ý là từ Huế, Đà Nẵng đến phía Đông, Quảng Ngãi và Gia Lai. Lượng mưa từ đêm\n[3:16] nay đến ngày 11 tháng 11 phổ biến trong khoảng từ 150 cho đến 300 mm, cục bộ\n[3:23] trên 500 mm. Phía Nam Quảng Trị, phía Đông Đắc Lắc và Khánh Hòa thì cũng có nguy cơ mưa rất to. Nhiệt độ cao nhất tại Quảng Trị đến Huế là từ 21 cho đến 24 độ. Còn phía Nam có nơi trên 24 độ.",
+                "score": 0.78473216
+              },
+              {
+                "title": "Thời tiết TP. Hồ Chí Minh - Dự báo thời tiết hôm nay, ngày mai và 7 ngày tới",
+                "url": "https://baomoi.com/tien-ich-thoi-tiet-tp-ho-chi-minh.epi",
+                "source": "baomoi.com",
+                "summary": "### Dự báo thời tiết hôm nay và ngày mai (7/11): Bắc Bộ đêm và sáng mưa rào, dông rải rác, cục bộ mưa to; các khu vực khác mưa vài nơi: Bắc Bộ đêm và sáng mưa rào, dông rải rác, cục bộ mưa to; các khu vực khác mưa vài nơi\")\n\nBáo Thế Giới & Việt Nam\n\nKhu vực Bắc Bộ đêm và sáng mưa rào, dông rải rác, cục bộ mưa to. Trung Bộ và Nam Bộ có mây, mưa rào, dông vài nơi.\n\nDự báo thời tiết hôm nay và ngày mai (6/11): Bắc Bộ mưa rào và dông rải rác, chiều tối cục bộ mưa to; phía Nam ngày nắng [...] Báo Tin Tức TTXVN\n\nNgày 5/11, cả nước phổ biến ngày nắng, chiều tối và đêm xuất hiện mưa rào, dông vài nơi. Hà Nội và các tỉnh Bắc Bộ duy trì nền nhiệt cao nhất từ 29-32 độ C, trong khi Nam Bộ có nơi đạt 34 độ C. Người dân cần đề phòng lốc, sét và gió giật mạnh.\n\nThời tiết hôm nay 5.11: Cả nước ngày nắng, đêm mưa dông vài nơi\n\n### Thời tiết hôm nay 5.11: Cả nước ngày nắng, đêm mưa dông vài nơi\n\nBáo Văn hóa [...] ### Dự báo thời tiết hôm nay và ngày mai (5/11): Các khu vực đêm mưa rào và dông vài nơi, ngày nắng: Các khu vực đêm mưa rào và dông vài nơi, ngày nắng\")\n\nBáo Thế Giới & Việt Nam\n\nCác khu vực có mây, đêm 4/11 mưa rào và dông vài nơi, ngày 5/11 nắng. Phía Bắc gió nhẹ, phía Nam gió cấp 2-3.\n\nThời tiết hôm nay 6/11: Hà Nội mưa dông, Bắc bộ có nơi mưa to\n\n### Thời tiết hôm nay 6/11: Hà Nội mưa dông, Bắc bộ có nơi mưa to\n\nChuyên Trang Doanh nhân & Công lý - Báo Công Lý",
+                "score": 0.7447496
+              },
+              {
+                "title": "Thời tiết – dự báo thời tiết hôm nay và ngày mai - Tuổi Trẻ Online",
+                "url": "https://tuoitre.vn/thoi-tiet.htm",
+                "source": "tuoitre.vn",
+                "summary": "Email: tto@tuoitre.com.vn\n Hotline: 0918.033.133\n\nThời tiết hôm nay 4-11: Bắc Bộ, Nam Bộ ngày nắng, chiều tối có nơi mưa rào \n\n### Thời tiết hôm nay 4-11: Bắc Bộ, Nam Bộ ngày nắng, chiều tối có nơi mưa rào\n\nThời tiết\n\nHôm nay 4-11, thời tiết cả nước khá ổn định, ban ngày trời nắng, về chiều tối một vài nơi mưa rào kèm dông.\n\nMiền Bắc sắp chuyển lạnh sau khi trải qua tháng 10 nóng kỷ lục 65 năm \n\n### Miền Bắc sắp chuyển lạnh sau khi trải qua tháng 10 nóng kỷ lục 65 năm\n\nThời tiết [...] Thời tiết\n\nDự báo khoảng từ đêm 5-11 đến cuối tuần này, miền Bắc khả năng đón hai đợt không khí lạnh liên tiếp gy mưa rào và dông rải rác, có nơi mưa to. Từ đầu tuần sau, miền Bắc chuyển lạnh, vùng núi trời rét.\n\nChưa vào mùa khô mưa đã hụt, lượng mưa tháng 11 năm nay ở miền Nam ra sao? \n\n### Chưa vào mùa khô mưa đã hụt, lượng mưa tháng 11 năm nay ở miền Nam ra sao?\n\nThời tiết [...] Thời tiết\n\nThời tiết đêm 1 ngày 2-11: Nam Bộ và Trung Bộ trời nhiều my, có mưa rào và dông rải rác, đề phòng mưa to cục bộ. Bắc Bộ mưa vài nơi, sáng sớm có sương mù...\n\nThời tiết ngày và đêm 31-10: Bắc Bộ ngày nắng, Trung và Nam Bộ đón mưa dông diện rộng \n\n### Thời tiết ngày và đêm 31-10: Bắc Bộ ngày nắng, Trung và Nam Bộ đón mưa dông diện rộng\n\nThời tiết",
+                "score": 0.6932451
+              }
+            ]
+          }
+        }
+      ],
+      "ended_at": "2026-11-10T12:50:50"
+    }
+  ],
+  "updated_at": "2026-11-10T12:50:50"
+}

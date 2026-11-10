@@ -1,0 +1,3 @@
+# Preserve exact historical bytes used by recorded SHA-256 hashes.
+*.md -text
+*.yaml -text

@@ -17,19 +17,34 @@ st.caption("Tìm tin, đọc bài viết, loại liên kết trùng và tạo b�
 
 with st.sidebar:
     st.header("Cuộc trò chuyện")
+    if st.session_state.get("selected_version") not in (None, "v1", "v2", "v3"):
+        st.session_state.selected_version = "v3"
+    selected_version = st.selectbox("Phiên bản agent", ["v1", "v2", "v3"], index=2, key="selected_version")
+    st.caption("Đổi phiên bản sẽ bắt đầu cuộc trò chuyện mới.")
     model = st.text_input("Model Gemini", value="gemini-3.5-flash")
     st.caption("API key được đọc từ file .env trên máy chủ.")
     if st.button("Cuộc trò chuyện mới"):
-        st.session_state.clear()
+        st.session_state.pop("transcript", None)
+        st.session_state.pop("history", None)
         st.rerun()
-    st.markdown("**Thử hỏi:**\n- Lấy 2 bài mới nhất của karpathy.\n- Tóm tắt bài viết này giúp mình.\n- Loại các URL trùng trong danh sách của tôi.")
+    st.markdown("**Thử hỏi:**\n- Lấy 2 bài mới nhất của karpathy.\n- Tóm tắt bài viết này giúp mình.")
+
+artifact_dir = ROOT / "artifacts" / "versions" / selected_version
+prompt_path = artifact_dir / "system_prompt.md"
+tools_path = artifact_dir / "tools.yaml"
+configuration = (selected_version, model)
+if st.session_state.get("configuration") != configuration:
+    st.session_state.pop("transcript", None)
+    st.session_state.pop("history", None)
+    st.session_state.configuration = configuration
 
 if "transcript" not in st.session_state:
-    version = build_artifact_version("v4-deduplicate", ROOT / "artifacts/system_prompt.md", ROOT / "artifacts/tools.yaml")
-    session_id = "ui_gemini_" + datetime.now().strftime("%Y%m%dT%H%M%S%f")
+    version = build_artifact_version(selected_version, prompt_path, tools_path)
+    session_id = "ui_" + selected_version + "_gemini_" + datetime.now().strftime("%Y%m%dT%H%M%S%f")
     st.session_state.transcript = {
         "transcript_id": session_id, **artifact_version_dict(version),
         "provider": "gemini", "model": model, "created_at": now_iso(),
+        "system_prompt": str(prompt_path), "tools": str(tools_path),
         "history_window": 5, "max_tool_rounds": 4, "turns": [],
     }
     st.session_state.history = []
@@ -47,11 +62,11 @@ for turn in transcript["turns"]:
 if prompt := st.chat_input("Bạn muốn tìm hiểu điều gì?"):
     record = {"turn_index": len(transcript["turns"]) + 1, "user": prompt, "started_at": now_iso(), "model": model}
     messages = [
-        {"role": "system", "content": (ROOT / "artifacts/system_prompt.md").read_text(encoding="utf-8")},
+        {"role": "system", "content": prompt_path.read_text(encoding="utf-8")},
         *trim_history(st.session_state.history, 5), {"role": "user", "content": prompt},
     ]
     # Delivery is excluded from this demo UI; the CLI retains the optional action tool.
-    declarations = [tool for tool in load_tool_declarations(ROOT / "artifacts/tools.yaml") if tool["name"] != "send"]
+    declarations = [tool for tool in load_tool_declarations(tools_path) if tool["name"] != "send"]
     record["enabled_tools"] = [tool["name"] for tool in declarations]
     try:
         with st.spinner("Đang xử lý yêu cầu…"):

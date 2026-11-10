@@ -23,3 +23,5 @@ Demo sequence:
 
 The recorded CLI demo transcript is agent-driven scripted input against the real
 Gemini API; a human should also try the UI before the classroom demonstration.
+
+The sidebar version selector supports v1, v2, and v3, with v3 selected by default. Historical versions use snapshots in artifacts/versions with hashes verified against recorded runs. Switching version or model starts a new conversation; existing transcript files remain saved. The demo UI excludes Telegram delivery for every version.

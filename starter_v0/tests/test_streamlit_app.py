@@ -3,6 +3,39 @@ from pathlib import Path
 from streamlit.testing.v1 import AppTest
 
 import chat
+import pytest
+
+
+@pytest.mark.parametrize("version", ["v1", "v2", "v3"])
+def test_version_selection_uses_snapshot_and_resets_history(monkeypatch, version):
+    captured = []
+    monkeypatch.setattr(chat, "write_transcript", lambda *args: None)
+    def complete(**kwargs):
+        captured.append(kwargs)
+        return {"status": "answered", "assistant_text": "Done", "rounds": [], "tool_events": []}
+    monkeypatch.setattr(chat, "run_model_tool_loop", complete)
+    root = Path(__file__).resolve().parents[1]
+    app = AppTest.from_file(str(root / "app.py")).run()
+    assert app.sidebar.selectbox[0].options == ["v1", "v2", "v3"]
+    assert app.sidebar.selectbox[0].value == "v3"
+    if version == "v3":
+        app.sidebar.selectbox[0].select("v1").run()
+    app.chat_input[0].set_value("Original conversation").run()
+    app.sidebar.selectbox[0].select(version).run()
+    assert not app.exception
+    assert app.session_state["history"] == []
+    assert app.session_state["transcript"]["version"] == version
+    app.chat_input[0].set_value("New conversation").run()
+    assert captured[-1]["messages"][0]["content"] == (root / "artifacts/versions" / version / "system_prompt.md").read_text(encoding="utf-8")
+    assert len(captured[-1]["messages"]) == 2
+    assert "deduplicate" not in [tool["function"]["name"] for tool in captured[-1]["tools"]]
+    import json
+    run = json.loads(next((root / "runs").glob(version + "_B_base_*.json")).read_text(encoding="utf-8"))
+    assert app.session_state["transcript"]["prompt_hash"] == run["prompt_hash"]
+    assert app.session_state["transcript"]["tools_hash"] == run["tools_hash"]
+    app.sidebar.button[0].click().run()
+    assert app.sidebar.selectbox[0].value == version
+    assert app.session_state["transcript"]["turns"] == []
 
 
 def test_chat_turn_persists_transcript_and_reset_starts_fresh(monkeypatch):
