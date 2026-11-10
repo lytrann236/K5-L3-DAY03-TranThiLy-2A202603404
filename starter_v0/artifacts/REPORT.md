@@ -21,7 +21,7 @@
 
 Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng URL rồi trình bày thành bản tin có nguồn. Khi thiếu thông tin, agent hỏi lại thay vì tự chọn một tài khoản hoặc bài viết.
 
-**Link dùng thử (triển khai):**[ https://groups-teams-veterinary-citysearch.trycloudflare.com](https://tranthily-research-agent.vercel.app/)
+**Link dùng thử (triển khai):**[ TRANTHILY](https://tranthily-research-agent.vercel.app/)
 
 
 ## A2. Tool agent có
