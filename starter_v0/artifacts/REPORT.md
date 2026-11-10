@@ -41,8 +41,6 @@ Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng
 | deduplicate   | Loại bài trùng URL, giữ bài đầu tiên và thứ tự                 | có                  |
 | stock_quote   | Trả dữ liệu cổ phiếu minh họa cố định; không phải giá hiện tại | có                  |
 
-UI chỉ có v1, v2, v3. V1/v2 dùng cấu hình lịch sử; v3 dùng bản hoàn thiện có tool mới. UI không bật `send`, nên v3 có 11 tool được cung cấp cho model.
-
 ## A3. Câu hỏi mẫu để thử
 
 1. Lấy 2 bài mới nhất của karpathy.
