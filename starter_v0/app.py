@@ -21,6 +21,8 @@ with st.sidebar:
         st.session_state.selected_version = "v3"
     selected_version = st.selectbox("Phiên bản agent", ["v1", "v2", "v3"], index=2, key="selected_version")
     st.caption("Đổi phiên bản sẽ bắt đầu cuộc trò chuyện mới.")
+    if selected_version == "v3":
+        st.caption("Bản hoàn thiện: có lọc URL trùng và dữ liệu cổ phiếu minh họa.")
     model = st.text_input("Model Gemini", value="gemini-3.5-flash")
     st.caption("API key được đọc từ file .env trên máy chủ.")
     if st.button("Cuộc trò chuyện mới"):
@@ -28,22 +30,28 @@ with st.sidebar:
         st.session_state.pop("history", None)
         st.rerun()
     st.markdown("**Thử hỏi:**\n- Lấy 2 bài mới nhất của karpathy.\n- Tóm tắt bài viết này giúp mình.")
+    if selected_version == "v3":
+        st.markdown('- Loại URL trùng: [{"url":"https://example.com/a"},{"url":"https://example.com/a"}].')
 
 artifact_dir = ROOT / "artifacts" / "versions" / selected_version
+if selected_version == "v3":
+    artifact_dir = ROOT / "artifacts"
+artifact_label = "v3-final" if selected_version == "v3" else selected_version
 prompt_path = artifact_dir / "system_prompt.md"
 tools_path = artifact_dir / "tools.yaml"
-configuration = (selected_version, model)
+configuration = (artifact_label, model, prompt_path.read_bytes(), tools_path.read_bytes())
 if st.session_state.get("configuration") != configuration:
     st.session_state.pop("transcript", None)
     st.session_state.pop("history", None)
     st.session_state.configuration = configuration
 
 if "transcript" not in st.session_state:
-    version = build_artifact_version(selected_version, prompt_path, tools_path)
+    version = build_artifact_version(artifact_label, prompt_path, tools_path)
     session_id = "ui_" + selected_version + "_gemini_" + datetime.now().strftime("%Y%m%dT%H%M%S%f")
     st.session_state.transcript = {
         "transcript_id": session_id, **artifact_version_dict(version),
         "provider": "gemini", "model": model, "created_at": now_iso(),
+        "selected_version": selected_version,
         "system_prompt": str(prompt_path), "tools": str(tools_path),
         "history_window": 5, "max_tool_rounds": 4, "turns": [],
     }

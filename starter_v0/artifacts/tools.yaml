@@ -36,8 +36,8 @@ tools:
   # ---------------- Core tools ----------------
   - name: clarify
     description: >-
-      Ask a clarifying question to the user when essential information or input arguments are missing.
-      WHEN TO USE: Use ONLY when a user request lacks a critical parameter (such as a missing screenname/handle for tweets, or a missing URL to read content) and you cannot proceed safely without guessing.
+      Ask for missing essential information or explicit confirmation before an external action.
+      WHEN TO USE: Use when a request lacks critical information, or use response_type=yes_no before sending/publishing even when all content is available.
       WHEN NOT TO USE: Do NOT use if all required parameters are provided or if the question is out of scope.
     parameters:
       type: object
@@ -175,9 +175,9 @@ tools:
 
   - name: stock_quote
     description: >-
-      Fetch current market price and quote data for a stock ticker symbol.
-      WHEN TO USE: Use when the user specifically asks for stock prices, market quotes, or ticker data (e.g., AAPL, NVDA, VHM).
-      WHEN NOT TO USE: Do NOT use for general company news or web searching.
+      Return STATIC DEMO quote data for AAPL, NVDA, or VHM; this is not live market data.
+      WHEN TO USE: Only for explicit requests for sample/demo stock data. Always disclose is_demo=true.
+      WHEN NOT TO USE: Do NOT use for current market prices or real investment decisions. Unknown symbols return an error without a price.
     parameters:
       type: object
       properties:

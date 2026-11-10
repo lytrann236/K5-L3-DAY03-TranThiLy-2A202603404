@@ -1,0 +1,90 @@
+{
+  "run_id": "v3-final-stock-demo_B_extension_gemini_20261110T154310124497",
+  "version": "v3-final-stock-demo",
+  "artifact_version": "v3-final-stock-demo+p3e5d8372b1ce+tb4142a36d220",
+  "prompt_hash": "3e5d8372b1ce3079e558f50a3b55d8445e254646e02e7937db364dc0fa546ae8",
+  "tools_hash": "b4142a36d220626f6081edb1b05aaca08efc55d58c17a3eab1686f5fc098f70e",
+  "phase": "B",
+  "suite": "extension",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "system_prompt": "E:\\AI\\labday3\\K5-L3-DAY03-TranThiLy-2A202603404\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "E:\\AI\\labday3\\K5-L3-DAY03-TranThiLy-2A202603404\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_stock_quote.json",
+  "dataset_id": "stock_quote_demo_boundary",
+  "dataset_role": "group",
+  "description": "Supplementary routing case for the static demo stock tool; separate from the required 10-case group suite.",
+  "generated_at": "2026-11-10T15:43:10",
+  "summary": {
+    "total_cases": 1,
+    "measured_cases": 1,
+    "provider_error_cases": 0,
+    "passed_cases": 1,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": null,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "S01_explicit_demo_quote",
+      "phase": "B",
+      "suite": "extension",
+      "case_suite": "extension",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Yêu cầu dữ liệu minh họa rõ ràng được chuyển tới stock_quote."
+      },
+      "input": "Cho tôi dữ liệu cổ phiếu minh họa của mã AAPL từ tool stock_quote. Tôi chỉ cần dữ liệu demo, không phải giá thị trường hiện tại.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "stock_quote",
+            "args": {
+              "symbol": "AAPL"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "stock_quote",
+            "args": {
+              "symbol": "AAPL"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "stock_quote",
+          "args": {
+            "symbol": "AAPL"
+          },
+          "result": {
+            "symbol": "AAPL",
+            "price": 225.5,
+            "currency": "USD",
+            "change": "+1.2%",
+            "status": "success",
+            "is_demo": true,
+            "source": "static_demo",
+            "as_of": null,
+            "message": "Static sample data for the lab; not a current market quote."
+          }
+        }
+      ]
+    }
+  ]
+}

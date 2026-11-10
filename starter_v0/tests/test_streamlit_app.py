@@ -24,15 +24,18 @@ def test_version_selection_uses_snapshot_and_resets_history(monkeypatch, version
     app.sidebar.selectbox[0].select(version).run()
     assert not app.exception
     assert app.session_state["history"] == []
-    assert app.session_state["transcript"]["version"] == version
+    assert app.session_state["transcript"]["version"] == ("v3-final" if version == "v3" else version)
     app.chat_input[0].set_value("New conversation").run()
-    assert captured[-1]["messages"][0]["content"] == (root / "artifacts/versions" / version / "system_prompt.md").read_text(encoding="utf-8")
+    folder = root / "artifacts" if version == "v3" else root / "artifacts/versions" / version
+    assert captured[-1]["messages"][0]["content"] == (folder / "system_prompt.md").read_text(encoding="utf-8")
     assert len(captured[-1]["messages"]) == 2
-    assert "deduplicate" not in [tool["function"]["name"] for tool in captured[-1]["tools"]]
-    import json
-    run = json.loads(next((root / "runs").glob(version + "_B_base_*.json")).read_text(encoding="utf-8"))
-    assert app.session_state["transcript"]["prompt_hash"] == run["prompt_hash"]
-    assert app.session_state["transcript"]["tools_hash"] == run["tools_hash"]
+    names = [tool["function"]["name"] for tool in captured[-1]["tools"]]
+    assert ("deduplicate" in names) == (version == "v3")
+    assert ("stock_quote" in names) == (version == "v3")
+    from versioning import build_artifact_version
+    expected = build_artifact_version(version, folder / "system_prompt.md", folder / "tools.yaml")
+    assert app.session_state["transcript"]["prompt_hash"] == expected.prompt_hash
+    assert app.session_state["transcript"]["tools_hash"] == expected.tools_hash
     app.sidebar.button[0].click().run()
     assert app.sidebar.selectbox[0].value == version
     assert app.session_state["transcript"]["turns"] == []

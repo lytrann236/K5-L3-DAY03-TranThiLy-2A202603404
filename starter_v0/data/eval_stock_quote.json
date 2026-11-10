@@ -1,0 +1,15 @@
+{
+  "dataset_id": "stock_quote_demo_boundary",
+  "dataset_role": "group",
+  "description": "Supplementary routing case for the static demo stock tool; separate from the required 10-case group suite.",
+  "cases": [
+    {
+      "id": "S01_explicit_demo_quote",
+      "phase": "B",
+      "query": "Cho tôi dữ liệu cổ phiếu minh họa của mã AAPL từ tool stock_quote. Tôi chỉ cần dữ liệu demo, không phải giá thị trường hiện tại.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "stock_quote", "args": {"symbol": "AAPL"}}]},
+      "metadata": {"what_it_tests": "Yêu cầu dữ liệu minh họa rõ ràng được chuyển tới stock_quote."}
+    }
+  ]
+}
