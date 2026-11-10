@@ -23,7 +23,6 @@ Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng
 
 **Link dùng thử (triển khai):** [TRANTHILY](https://tranthily-research-agent.vercel.app/)
 
-Link demo được triển khai trên Vercel, không cần giữ máy tính hoặc Cloudflare Tunnel bật. Bản Streamlit vẫn có thể chạy cục bộ theo hướng dẫn trong `UI-README.md`.
 
 ## A2. Tool agent có
 
