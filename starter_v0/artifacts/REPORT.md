@@ -155,7 +155,6 @@ Chi tiết kiểm thử và lỗi được phát hiện:
 
 **Hướng cải thiện tiếp theo:** bổ sung case kiểm tra nội dung và nguồn trích dẫn, thử thêm câu hỏi ngoài bộ eval, tạo link triển khai ổn định và kiểm tra xác nhận Telegram qua phiên demo riêng. Không sửa bộ base để nâng điểm.
 
-**Lưu ý nộp bài:** link Vercel không phụ thuộc máy local, nhưng vẫn áp dụng hạn mức hosting và API. Không nộp .env hoặc API key. Người nộp tự đối chiếu thời hạn 16:30 theo lịch lớp; báo cáo không tự xác nhận tiêu chí thời gian này.
 
 ## B7. Thử thách model nhỏ chạy cục bộ (bonus)
 
