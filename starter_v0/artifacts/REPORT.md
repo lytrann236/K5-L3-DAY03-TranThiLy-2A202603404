@@ -21,7 +21,7 @@
 
 Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng URL rồi trình bày thành bản tin có nguồn. Khi thiếu thông tin, agent hỏi lại thay vì tự chọn một tài khoản hoặc bài viết.
 
-**Link dùng thử (triển khai):** https://tranthily-research-agent.vercel.app
+**Link dùng thử (triển khai):** [TRANTHILY](https://tranthily-research-agent.vercel.app/)
 
 Link demo được triển khai trên Vercel, không cần giữ máy tính hoặc Cloudflare Tunnel bật. Bản Streamlit vẫn có thể chạy cục bộ theo hướng dẫn trong `UI-README.md`.
 

@@ -81,7 +81,7 @@ def build():
 Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng URL rồi trình bày thành bản tin có nguồn. Khi thiếu thông tin, agent hỏi lại thay vì tự chọn một tài khoản hoặc bài viết.
 
 """
-    text += f"**Link dùng thử (triển khai):** {DEMO_URL}\n\n"
+    text += f"**Link dùng thử (triển khai):** [TRANTHILY]({DEMO_URL}/)\n\n"
     text += """Link demo được triển khai trên Vercel, không cần giữ máy tính hoặc Cloudflare Tunnel bật. Bản Streamlit vẫn có thể chạy cục bộ theo hướng dẫn trong `UI-README.md`.
 
 ## A2. Tool agent có
