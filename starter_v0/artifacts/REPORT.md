@@ -1,4 +1,4 @@
-# Báo cáo Research Agent — Day 03 Lab v2
+# Báo cáo Day 03 Lab v2 — Research Agent
 
 ## Thông tin nhóm
 
@@ -6,43 +6,45 @@
 - Nhà cung cấp/model: Gemini / `gemini-3.5-flash`.
 - **Thành viên nhóm:**
 
-  | STT | Họ và tên | Mã sinh viên |
-  |---|---|---|
-  | 1 | Trần Thị Lý | 2A202603404 |
-  | 2 | Nguyễn Thị Hương Giang | 2A202603538 |
-  | 3 | Nguyễn Thuỳ Dương | 2A202603388 |
-  | 4 | Nguyễn Quỳnh Trang | 2A202603477 |
+  | STT | Họ và tên              | Mã sinh viên |
+  | --- | ---------------------- | ------------ |
+  | 1   | Trần Thị Lý            | 2A202603404  |
+  | 2   | Nguyễn Thị Hương Giang | 2A202603538  |
+  | 3   | Nguyễn Thuỳ Dương      | 2A202603388  |
+  | 4   | Nguyễn Quỳnh Trang     | 2A202603477  |
+
+---
 
 # PHẦN A — Giới thiệu agent
 
-## A1. Agent làm được gì và link dùng thử
+## A1. Agent này làm được gì
 
-Agent tìm tin tức web và bài đăng X, đọc URL, lọc các bài trùng URL và trình bày bản tin có nguồn. Khi thiếu thông tin, agent hỏi lại thay vì tự chọn một tài khoản hoặc bài viết.
+Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng URL rồi trình bày thành bản tin có nguồn. Khi thiếu thông tin, agent hỏi lại thay vì tự chọn một tài khoản hoặc bài viết.
 
-**Link demo:** https://groups-teams-veterinary-citysearch.trycloudflare.com
+**Link dùng thử (triển khai):** https://groups-teams-veterinary-citysearch.trycloudflare.com
 
-Đã kiểm tra trang chính và `/_stcore/health` qua link công khai: HTTP 200; kết nối WebSocket của Streamlit qua tunnel cũng thành công. Đây là link Cloudflare Tunnel tạm thời, chỉ hoạt động khi máy chủ Streamlit và tiến trình tunnel còn chạy. Link cục bộ: http://localhost:8501. Hướng dẫn khởi chạy lại: `UI-README.md`.
+Đây là link tạm thời, phụ thuộc máy chủ Streamlit và tiến trình tunnel. Đã kiểm tra HTTP 200 và kết nối WebSocket khi triển khai; xem `UI-README.md` để khởi chạy lại.
 
-UI chỉ có v1, v2, v3. V1 và v2 dùng cấu hình lịch sử; v3 dùng bản hoàn thiện với 12 tool khai báo. UI không cung cấp hành động gửi Telegram nên có 11 tool thực thi được từ lựa chọn v3. Transcript ghi nhãn `v3-final` và hash thực tế để phân biệt với v3 lịch sử.
+## A2. Tool agent có
 
-## A2. Các tool
+| Tên tool      | Làm được gì                                                    | Tool mới nhóm thêm? |
+| ------------- | -------------------------------------------------------------- | ------------------- |
+| clarify       | Hỏi lại khi thiếu thông tin hoặc cần xác nhận                  | không               |
+| timeline      | Lấy bài đăng gần đây của một tài khoản X                       | không               |
+| social_search | Tìm bài đăng X theo chủ đề, mới nhất hoặc phổ biến             | không               |
+| lookup        | Tìm thông tin và tin tức web theo khoảng thời gian             | không               |
+| fetch         | Đọc nội dung một URL cụ thể                                    | không               |
+| format        | Trình bày dữ liệu đã có thành bản tin                          | không               |
+| send          | Gửi Telegram sau xác nhận; chỉ cung cấp qua CLI                | không               |
+| policy        | Tìm trong chính sách nội bộ                                    | không               |
+| papers        | Tìm bài báo khoa học trên arXiv                                | không               |
+| paper_text    | Trích văn bản từ bài báo arXiv                                 | không               |
+| deduplicate   | Loại bài trùng URL, giữ bài đầu tiên và thứ tự                 | có                  |
+| stock_quote   | Trả dữ liệu cổ phiếu minh họa cố định; không phải giá hiện tại | có                  |
 
-| Tên tool | Làm được gì | Tool mới nhóm thêm? |
-|---|---|---|
-| clarify | Hỏi thông tin còn thiếu hoặc xin xác nhận | không |
-| timeline | Lấy bài đăng gần đây của tài khoản X | không |
-| social_search | Tìm bài đăng X theo chủ đề, Top hoặc Latest | không |
-| lookup | Tìm web và tin tức theo khoảng thời gian | không |
-| fetch | Đọc nội dung một URL | không |
-| format | Trình bày dữ liệu đã có thành bản tin | không |
-| send | Gửi Telegram khi có cấu hình và xác nhận; chỉ dùng qua CLI | không |
-| policy | Tìm chính sách nội bộ | không |
-| papers | Tìm bài báo arXiv | không |
-| paper_text | Trích văn bản bài báo arXiv | không |
-| deduplicate | Giữ bài đầu tiên cho mỗi URL trùng, giữ thứ tự | có |
-| stock_quote | Trả dữ liệu cổ phiếu minh họa cố định cho AAPL, NVDA, VHM; không phải giá hiện tại | có |
+UI chỉ có v1, v2, v3. V1/v2 dùng cấu hình lịch sử; v3 dùng bản hoàn thiện có tool mới. UI không bật `send`, nên v3 có 11 tool được cung cấp cho model.
 
-## A3. Câu hỏi mẫu
+## A3. Câu hỏi mẫu để thử
 
 1. Lấy 2 bài mới nhất của karpathy.
 2. Tin AI hôm nay có gì nổi bật?
@@ -50,106 +52,112 @@ UI chỉ có v1, v2, v3. V1 và v2 dùng cấu hình lịch sử; v3 dùng bản
 4. Loại URL trùng, giữ bài đầu tiên: `[{"title":"A","url":"https://example.com/a"},{"title":"B","url":"https://example.com/a"}]`.
 5. Cho tôi dữ liệu cổ phiếu minh họa của mã AAPL, không cần giá hiện tại.
 
+---
+
 # PHẦN B — Chi tiết / Bằng chứng
 
-## B1. Phiên bản và kết quả thực tế
+## B1. Bằng chứng phiên bản
 
-V0–v3 lịch sử dùng cùng model Gemini. Mỗi vòng tối ưu v1–v3 kiểm chứng một giả thuyết; các bản gốc được giữ trong `artifacts/versions/`. Bản `v3-final` là vòng tích hợp nhiều sửa đổi sau đó, không thay thế hay viết lại kết quả lịch sử.
+Nguồn: `artifacts/version_log.csv` và `runs/*.json`. Chỉ tiêu trước/sau trong bảng là tỷ lệ case đúng. V0–v3 là chuỗi tối ưu Gemini lịch sử; `v3-final` là bản tích hợp được đo lại riêng, không thay thế số liệu cũ. UI chọn v3 nhưng transcript ghi `v3-final` và hash cấu hình thực tế.
 
-| Phiên bản | Thay đổi / giả thuyết | Điểm trước | Điểm sau | File bằng chứng |
-|---|---|---:|---:|---|
-| v0 | Baseline chưa tối ưu | — | 55% | `runs/v0_B_base_gemini_20261110T102151789910.json` |
-| v1 | Hỏi lại khi thiếu handle/URL thay vì đoán | 55% | 55% | `runs/v1_B_base_gemini_20261110T104455968698.json` |
-| v2 | Chỉ hỏi tài khoản khi đối tượng thiếu hoặc mơ hồ | 55% | 65% | `runs/v2_B_base_gemini_20261110T105314645987.json` |
-| v3 | Yêu cầu xác nhận trước khi gửi | 65% | 70% | `runs/v3_B_base_gemini_20261110T105833327686.json` |
-| v3-final / base | Hoàn thiện routing, nhiều tool, xác nhận và UI | 70% | 100% | `runs/v3-final_B_base_gemini_20261110T154117007662.json` |
-| v3-final / group | Kiểm tra lại cùng 10 case của nhóm | 100% | 100% | `runs/v3-final_B_group_gemini_20261110T154026976389.json` |
+| Phiên bản       | File thay đổi                          | Giả thuyết                                                             | Chỉ số trước | Chỉ số sau | File kết quả chạy                                         |
+| --------------- | -------------------------------------- | ---------------------------------------------------------------------- | -----------: | ---------: | --------------------------------------------------------- |
+| v0              | Bản gốc                                | Đo chất lượng ban đầu                                                  |            — |        55% | `runs/v0_B_base_gemini_20261110T102151789910.json`        |
+| v1              | `artifacts/system_prompt.md`           | Hỏi lại khi thiếu tài khoản/URL sẽ sửa R10, R11                        |          55% |        55% | `runs/v1_B_base_gemini_20261110T104455968698.json`        |
+| v2              | `artifacts/system_prompt.md`           | Phân biệt thiếu đối tượng với tên người rõ ràng sẽ giảm hỏi lại thừa   |          55% |        65% | `runs/v2_B_base_gemini_20261110T105314645987.json`        |
+| v3              | `artifacts/system_prompt.md`           | Xin xác nhận trước gửi sẽ sửa R12                                      |          65% |        70% | `runs/v3_B_base_gemini_20261110T105833327686.json`        |
+| v3-final / base | Prompt, khai báo tool, UI, stock_quote | Tích hợp quy tắc chọn tool, tham số và xác nhận để sửa các lỗi còn lại |          70% |       100% | `runs/v3-final_B_base_gemini_20261110T154117007662.json`  |
+| v3-final / nhóm | Cùng cấu hình hoàn thiện               | Kiểm tra lại cùng 10 case nhóm với bộ tool mở rộng                     |         100% |       100% | `runs/v3-final_B_group_gemini_20261110T154026976389.json` |
 
-Hash đầy đủ, tác giả, lý do và đường dẫn run được ghi trong `artifacts/version_log.csv`. Bộ base và bộ group là hai tập dữ liệu riêng; không dùng điểm group để thay cho điểm base. Các run OpenRouter được nhóm đóng góp vẫn giữ trong `runs/`, nhưng không trộn vào chuỗi so sánh Gemini này.
+V1 sửa R10/R11 nhưng gây hỏi lại quá mức nên tổng điểm giữ 55%; v2 đạt 65%; v3 lịch sử tránh gửi ngay nhưng R12 còn sai `response_type`, nên giả thuyết xác nhận chưa đạt ở vòng đó. Bản hoàn thiện sửa các vấn đề còn lại và có run riêng. Điểm base và điểm nhóm thuộc hai bộ dữ liệu khác nhau; không dùng điểm nhóm để thay thế điểm base. Run OpenRouter của nhóm được giữ riêng, không trộn với chuỗi Gemini.
 
-**Kết luận từng giả thuyết:** v1 sửa R10/R11 nhưng gây hỏi lại quá mức nên tổng điểm giữ 55%; v2 phục hồi các yêu cầu đã nêu rõ người, đạt 65%; v3 đã tránh gửi ngay nhưng R12 còn sai `response_type=text`, nên chưa chứng minh thành công giả thuyết xác nhận. Bản hoàn thiện được đo lại riêng, không suy diễn điểm từ các run trước.
+## B2. Phân tích lỗi
 
-## B2. Phân tích lỗi baseline v0
+Các dòng sau lấy từ `results[*].result.failures` của baseline Gemini v0. Giữ nguyên mã loại lỗi của bộ chấm; nội dung dài trong tham số `text` được rút gọn để bảng dễ đọc, xem đầy đủ trong run JSON gốc.
 
-Các dòng sau lấy trực tiếp từ `results` của baseline Gemini; giữ mã loại lỗi của bộ chấm.
+| Mã case                     | Loại lỗi         | Lời gọi tool thực tế                                                                                                                                                                       | Nội dung sai                                                                            | Cách sửa                                    |
+| --------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------- |
+| R03_web_news_routing        | wrong_tool       | [{"name": "lookup", "args": {"query": "latest AI news today", "topic": "news", "max_results": 5, "timeframe": "day"}}]                                                                     | query: kỳ vọng 'AI', thực tế 'latest AI news today'                                     | Làm rõ chọn nguồn/tool và query theo chủ đề |
+| R08_out_of_scope            | out_of_scope     | [{"name": "send", "args": {"confirmed": true, "text": "Nguyên hàm của hàm số f(x) = x^2 là:\n\n∫ x^2 dx = (x^3 / 3) + C\n\ntrong đó C là hằng số tích phân."}}]                            | Yêu cầu không gọi tool nhưng agent vẫn gọi                                              | Từ chối ngoài phạm vi, không gọi tool       |
+| R09_no_tool_capability      | unnecessary_tool | [{"name": "policy", "args": {"query": "vai trò và khả năng của trợ lý"}}]                                                                                                                  | Yêu cầu không gọi tool nhưng agent vẫn gọi                                              | Trả lời năng lực trực tiếp                  |
+| R10_missing_handle          | missing_info     | [{"name": "timeline", "args": {"limit": 5, "screenname": "sama"}}]                                                                                                                         | Thiếu lời gọi clarify; Thừa lời gọi timeline                                            | Hỏi tài khoản hoặc URL còn thiếu            |
+| R11_missing_url             | missing_info     | [{"name": "fetch", "args": {"url": "https://openai.com/index/hello-gpt-4o/"}}]                                                                                                             | Thiếu lời gọi clarify; Thừa lời gọi fetch                                               | Hỏi tài khoản hoặc URL còn thiếu            |
+| R12_confirm_before_send     | wrong_boundary   | [{"name": "send", "args": {"confirmed": true, "text": "Bản tin cập nhật tin tức mới nhất trong ngày."}}]                                                                                   | Thiếu lời gọi clarify; Thừa lời gọi send                                                | Xin xác nhận bằng yes_no trước gửi          |
+| R13_parallel_web_and_tweets | wrong_tool       | [{"name": "lookup", "args": {"timeframe": "day", "query": "tin tức AI mới nhất hôm nay", "topic": "news"}}]                                                                                | query: kỳ vọng 'AI', thực tế 'tin tức AI mới nhất hôm nay'; Thiếu lời gọi social_search | Làm rõ chọn nguồn/tool và query theo chủ đề |
+| R14_out_of_scope_coding     | out_of_scope     | [{"name": "send", "args": {"confirmed": true, "text": "Dưới đây là hàm Python tính số Fibonacci bằng phương pháp đệ quy (recursion):\n\n```python\ndef fibonac… [rút gọn; xem log gốc]"}}] | Yêu cầu không gọi tool nhưng agent vẫn gọi                                              | Từ chối ngoài phạm vi, không gọi tool       |
+| M06_switch_tool             | wrong_tool       | [{"name": "lookup", "args": {"topic": "news", "query": "OpenAI news"}}]                                                                                                                    | query: kỳ vọng 'OpenAI', thực tế 'OpenAI news'                                          | Làm rõ chọn nguồn/tool và query theo chủ đề |
 
-| Case | Loại lỗi | Lời gọi thực tế | Chi tiết sai | Hướng sửa |
-|---|---|---|---|---|
-| R03_web_news_routing | wrong_tool | [{"name": "lookup", "args": {"query": "latest AI news today", "topic": "news", "max_results": 5, "timeframe": "day"}}] | query: expected 'AI', got 'latest AI news today' | Làm rõ routing, query theo chủ đề và yêu cầu nhiều nguồn |
-| R08_out_of_scope | out_of_scope | [{"name": "send", "args": {"confirmed": true, "text": "Nguyên hàm của hàm số f(x) = x^2 là:\n\n∫ x^2 dx = (x^3 / 3) + C\n\ntrong đó C là hằng số tích phân."}}] | expected no tool call | Từ chối yêu cầu ngoài phạm vi, không gọi tool |
-| R09_no_tool_capability | unnecessary_tool | [{"name": "policy", "args": {"query": "vai trò và khả năng của trợ lý"}}] | expected no tool call | Trả lời câu hỏi năng lực trực tiếp |
-| R10_missing_handle | missing_info | [{"name": "timeline", "args": {"limit": 5, "screenname": "sama"}}] | missing tool call clarify; extra tool call timeline | Hỏi rõ đối tượng hoặc URL |
-| R11_missing_url | missing_info | [{"name": "fetch", "args": {"url": "https://openai.com/index/hello-gpt-4o/"}}] | missing tool call clarify; extra tool call fetch | Hỏi rõ đối tượng hoặc URL |
-| R12_confirm_before_send | wrong_boundary | [{"name": "send", "args": {"confirmed": true, "text": "Bản tin cập nhật tin tức mới nhất trong ngày."}}] | missing tool call clarify; extra tool call send | Xin xác nhận trước gửi bằng yes_no |
-| R13_parallel_web_and_tweets | wrong_tool | [{"name": "lookup", "args": {"timeframe": "day", "query": "tin tức AI mới nhất hôm nay", "topic": "news"}}] | query: expected 'AI', got 'tin tức AI mới nhất hôm nay'; missing tool call social_search | Làm rõ routing, query theo chủ đề và yêu cầu nhiều nguồn |
-| R14_out_of_scope_coding | out_of_scope | [{"name": "send", "args": {"confirmed": true, "text": "Dưới đây là hàm Python tính số Fibonacci bằng phương pháp đệ quy (recursion):\n\n```python\ndef fibonacci(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    return fibonacci(n - 1) + fibonacci(n - 2)\n\n# Ví dụ sử dụng:\nprint(fibonacci(10))  # Kết quả: 55\n```\n\n**Lưu ý:** Cách đệ quy cơ bản này có độ phức tạp thời gian là $O(2^n)$. Nếu cần tính với $n$ lớn, bạn nên sử dụng **memoization** (`@functools.lru_cache`) để tối ưu hiệu năng:\n\n```python\nfrom functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fibonacci_fast(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    return fibonacci_fast(n - 1) + fibonacci_fast(n - 2)\n```"}}] | expected no tool call | Từ chối yêu cầu ngoài phạm vi, không gọi tool |
-| M06_switch_tool | wrong_tool | [{"name": "lookup", "args": {"topic": "news", "query": "OpenAI news"}}] | query: expected 'OpenAI', got 'OpenAI news' | Làm rõ routing, query theo chủ đề và yêu cầu nhiều nguồn |
+Bản hoàn thiện đạt 20/20 case base trong lần đo đã lưu. Kết quả này không bảo đảm mọi câu hỏi thực tế đều đúng.
 
-Kết quả base mới nhất: không có case thất bại trong lần đo này. Điểm một lần chạy không bảo đảm mọi câu hỏi thực tế đều đúng.
+## B3. Các case eval của nhóm
 
+`data/eval_group.json` có 10 case, gồm 5 một lượt và 5 nhiều lượt. Mỗi case có mã, pha B, loại lỗi, đầu vào, kỳ vọng và mục tiêu kiểm tra. Không sửa `data/eval_base.json`.
 
-## B3. Bộ eval nhóm: 5 một lượt + 5 nhiều lượt
+| Mã case                            | Nội dung kiểm tra                            | Tool/hành vi kỳ vọng                                                                                                                                                                      | Kết quả |
+| ---------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| G01_deduplicate_urls               | Một lượt: loại URL trùng từ danh sách có sẵn | deduplicate({"items": [{"title": "First", "url": "https://example.com/a"}, {"title": "Duplicate", "url": "https://example.com/a"}, {"title": "Second", "url": "https://example.com/b"}]}) | Đạt     |
+| G02_missing_article_url            | Một lượt: hỏi URL còn thiếu                  | clarify({"response_type": "text"})                                                                                                                                                        | Đạt     |
+| G03_explicit_timeline              | Một lượt: dùng đúng handle và giới hạn 2 bài | timeline({"screenname": "karpathy", "limit": 2})                                                                                                                                          | Đạt     |
+| G04_top_social_posts               | Một lượt: tìm bài X phổ biến theo chủ đề     | social_search({"search_type": "Top", "limit": 3})                                                                                                                                         | Đạt     |
+| G05_format_supplied_items          | Một lượt: định dạng bài đã cung cấp          | format({"template": "bullets", "items": [{"title": "Lab update", "url": "https://example.com/lab", "summary": "Evaluation is complete."}]})                                               | Đạt     |
+| G06_correct_account_and_limit      | Nhiều lượt: sửa tài khoản và số bài          | timeline({"screenname": "karpathy", "limit": 2})                                                                                                                                          | Đạt     |
+| G07_supply_url_after_clarification | Nhiều lượt: giữ URL đã được bổ sung          | fetch({"url": "https://example.com/research"})                                                                                                                                            | Đạt     |
+| G08_switch_social_sort             | Nhiều lượt: đổi cách sắp xếp và giữ số lượng | social_search({"search_type": "Top", "limit": 4})                                                                                                                                         | Đạt     |
+| G09_deduplicate_carry_items        | Nhiều lượt: lọc trùng danh sách ở lượt trước | deduplicate({"items": [{"title": "A", "url": "https://example.com/a"}, {"title": "Copy", "url": "https://example.com/a"}]})                                                               | Đạt     |
+| G10_correct_digest_template        | Nhiều lượt: đổi mẫu trình bày, giữ dữ liệu   | format({"template": "bullets", "items": [{"title": "Research", "url": "https://example.com/research"}]})                                                                                  | Đạt     |
 
-`data/eval_group.json` có 10 case, đầy đủ `id`, `phase=B`, loại lỗi, đầu vào, kỳ vọng và `metadata.what_it_tests`. Giữ nguyên `data/eval_base.json`.
+Kết quả: 10/10, không lỗi nhà cung cấp. Bằng chứng: `runs/v3-final_B_group_gemini_20261110T154026976389.json`.
 
-| Case | Số lượt | Nội dung kiểm tra | Tool kỳ vọng | Kết quả |
-|---|---:|---|---|---|
-| G01_deduplicate_urls | 1 | Loại URL trùng từ danh sách đã có | deduplicate | Đạt |
-| G02_missing_article_url | 1 | Hỏi URL còn thiếu | clarify | Đạt |
-| G03_explicit_timeline | 1 | Đúng handle và giới hạn 2 bài | timeline | Đạt |
-| G04_top_social_posts | 1 | Tìm bài X theo chủ đề, Top và giới hạn | social_search | Đạt |
-| G05_format_supplied_items | 1 | Định dạng bài đã cung cấp | format | Đạt |
-| G06_correct_account_and_limit | 3 | Sửa tài khoản và số bài qua nhiều lượt | timeline | Đạt |
-| G07_supply_url_after_clarification | 3 | Giữ URL được bổ sung ở lượt trước | fetch | Đạt |
-| G08_switch_social_sort | 3 | Đổi Latest sang Top, giữ số lượng | social_search | Đạt |
-| G09_deduplicate_carry_items | 3 | Lọc trùng danh sách từ lượt trước | deduplicate | Đạt |
-| G10_correct_digest_template | 3 | Đổi mẫu trình bày, giữ danh sách | format | Đạt |
+Case bổ sung riêng cho `stock_quote`: `data/eval_stock_quote.json`, đạt 1/1; bằng chứng `runs/v3-final-stock-demo_B_extension_gemini_20261110T154310124497.json`. Case này không thay đổi cơ cấu 10 case nhóm.
 
-Bằng chứng: `runs/v3-final_B_group_gemini_20261110T154026976389.json`. Đạt 10/10, lỗi nhà cung cấp: 0.
+## B4. Bằng chứng chat trực tiếp
 
-Bổ sung riêng cho stock_quote: `data/eval_stock_quote.json`, kết quả 1/1; `runs/v3-final-stock-demo_B_extension_gemini_20261110T154310124497.json`. Case này không làm thay đổi cơ cấu 10 case của bộ group.
+Bảng dưới dùng phiên UI gọi Gemini thật qua Streamlit AppTest với 3 đầu vào theo kịch bản, không dùng phản hồi giả lập. Đây là kiểm tra tự động, không phải người nhập trực tiếp từng lượt. Nội dung yêu cầu được diễn giải lại bằng tiếng Việt vì đầu vào phiên này bị mất dấu khi truyền qua terminal Windows; giữ nguyên transcript gốc.
 
+| Lượt | Yêu cầu người dùng (diễn giải)                                                                  | Lời gọi tool | Bằng chứng phiên bản                                  | Kết quả                    |
+| ---- | ----------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------- | -------------------------- |
+| 1    | Tóm tắt bài viết nhưng chưa cung cấp URL                                                        | clarify      | v3-final; prompt `3e5d8372b1ce`; tools `b4142a36d220` | Đã hỏi lại, chờ người dùng |
+| 2    | Bổ sung URL https://example.com                                                                 | fetch        | v3-final; prompt `3e5d8372b1ce`; tools `b4142a36d220` | Đã trả lời                 |
+| 3    | Loại bài trùng URL https://example.com/a trong danh sách A, B; giữ bài đầu tiên, không tìm kiếm | deduplicate  | v3-final; prompt `3e5d8372b1ce`; tools `b4142a36d220` | Đã trả lời                 |
 
-## B4. Bằng chứng hội thoại
+Transcript UI: `transcripts/ui_v3_gemini_20261110T154007632059.transcript.json`. Hash đầy đủ nằm trong file này.
 
-Phiên UI mới nhất bên dưới dùng Gemini thật; thao tác được thực hiện tự động theo kịch bản qua Streamlit AppTest, không phải dữ liệu giả lập. Các transcript người dùng đã thử trước đó cũng được giữ trong `transcripts/`.
+Các bằng chứng bổ sung:
 
-| Lượt | Yêu cầu | Tool thực tế | Trạng thái |
-|---|---|---|---|
-| 1 | T?m t?t b?i vi?t n?y gi?p m?nh. | clarify | waiting_for_user |
-| 2 | https://example.com | fetch | answered |
-| 3 | Lo?i c?c URL tr?ng trong danh s?ch n?y, gi? b?i ??u ti?n: [{"title":"A","url":"https://example.com/a"},{"title":"B","url":"https://example.com/a"}]. Ch? l?c tr?ng, kh?ng t?m ki?m. | deduplicate | answered |
+- CLI gọi API thật, 3 lượt: `transcripts/v4-deduplicate_gemini_20261110T112423997480.transcript.json`.
+- Phiên người dùng thử UI, 4 lượt thành công: `transcripts/ui_gemini_20261110T122056694086.transcript.json`. Phiên này thuộc cấu hình trước khi có nhãn `v3-final`.
 
-Bằng chứng UI: `transcripts/ui_v3_gemini_20261110T154007632059.transcript.json`. CLI có phiên 3 lượt thật tại `transcripts/v4-deduplicate_gemini_20261110T112423997480.transcript.json`. Phiên người dùng thử 4 lượt thành công: `transcripts/ui_gemini_20261110T122056694086.transcript.json`.
+## B5. Bằng chứng bonus
 
+| Bonus                   | File bằng chứng                                                                                                      | Phần đã hoạt động                                                               | Giới hạn / quy tắc kiểm soát                                                                         |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| send (Telegram)         | `tests/test_tools_examples.py`, `tests/test_tools_todo.py`                                                           | Đã kiểm tra bằng HTTP giả lập việc không gửi khi thiếu xác nhận                 | Chưa có transcript gửi Telegram thật sau xác nhận; chưa nhận hoàn thành bonus này; UI không bật send |
+| arXiv/chính sách nội bộ | `tools/papers/`, `tools/paper_text/`, `tools/policy/`; test policy trong `tests/test_tools_todo.py`                  | Có tool và test tìm chính sách, lọc nội dung chỉ dẫn không đáng tin             | Chưa có run demo arXiv thật được dẫn chứng trong báo cáo; không nhận hoàn thành bonus arXiv          |
+| UI                      | `app.py`, `tests/test_streamlit_app.py`, `UI-README.md` và transcript ở B4                                           | Có chọn v1/v2/v3, lịch sử chat, xem tool, lưu/tải JSON; đã kiểm tra link public | Link phụ thuộc máy chủ và tunnel; v1/v2 là bản lịch sử                                               |
+| Unit test tool          | `artifacts/pytest-results.txt`, `tests/test_deduplicate.py`, `tests/test_stock_quote.py`, `tests/test_tools_todo.py` | Hoàn thành test TODO, không bỏ qua test; có test cho hai tool mới               | Unit test dùng mạng giả lập; không thay thế kiểm tra API thật                                        |
 
-## B5. Tool mới, test và các lỗi đã sửa
+Kết quả pytest đã lưu: **122 test đạt, 0 lỗi, 0 bỏ qua** tại `artifacts/pytest-results.txt`.
 
-- `deduplicate`: chạy cục bộ; so URL chính xác sau khi bỏ khoảng trắng, giữ bài đầu tiên và thứ tự, không so nghĩa nội dung. Có TOOL.md đầy đủ, khai báo schema, đăng ký implementation, 14 test trong `test_deduplicate.py` và 3 test qua registry trong `test_tools_todo.py`.
-- `stock_quote`: dữ liệu **minh họa cố định**, không phải giá thị trường. TOOL.md đã đủ frontmatter. Kết quả có `is_demo=true`, `source=static_demo`, `as_of=null`. Đầu vào rỗng/sai kiểu trả error dict; mã không hỗ trợ không còn được gán giá mặc định. Có 3 test ban đầu và 7 trường hợp kiểm thử bổ sung.
-- Bộ chấm từng sắp xếp trực tiếp dictionary trong danh sách, gây TypeError; đã sửa dùng biểu diễn JSON xác định và giữ regression test.
-- Log tool có emoji/tiếng Việt gây UnicodeEncodeError trên console Windows cp1252; đã chuyển log chẩn đoán sang ASCII và thêm regression test. Transcript vẫn giữ Unicode.
-- UI có test đổi phiên bản, dùng đúng prompt/tool, giữ lịch sử đúng phạm vi, lưu transcript, reset và xử lý lỗi nhà cung cấp.
-- Kết quả kiểm thử hoàn thiện: **122 test đạt, 0 lỗi, 0 bỏ qua**. Các HTTP trong unit test đều giả lập; eval và demo riêng dùng API thật.
+Chi tiết kiểm thử và lỗi được phát hiện:
 
-## B6. Nhận xét và giới hạn
+- `deduplicate`: 14 trường hợp trong `test_deduplicate.py` và 3 test qua registry; kiểm tra lọc trùng, thứ tự, metadata, không sửa đầu vào và lỗi dữ liệu.
+- `stock_quote`: 3 test ban đầu và 7 trường hợp bổ sung. Phát hiện và sửa 2 vấn đề trong tool được nhóm thêm: đầu vào sai kiểu gây lỗi thay vì trả error dict; mã không hỗ trợ được trả giá mặc định. Kết quả nay có `is_demo=true`, `source=static_demo`, `as_of=null`, không giả làm giá thị trường.
+- Chưa ghi nhận lỗi mới trong các tool có sẵn của starter. Có 2 lỗi ở hạ tầng được sửa và giữ regression test: bộ chấm sắp xếp dictionary gây TypeError (`test_eval_normalization.py`), và log Unicode gây lỗi console Windows (`test_chat_encoding.py`). Không tính hai lỗi này thành lỗi của tool có sẵn.
+- Ví dụ lỗi unit test phát hiện mà eval định tuyến không phát hiện: model gọi đúng `stock_quote(symbol="UNKNOWN")` nhưng implementation cũ vẫn bịa giá mặc định; `test_unknown_symbol_does_not_invent_price` kiểm tra không được trả trường `price`.
+- Có UI và 2 tool mới, chưa đạt bonus yêu cầu hơn 3 tool mới. Poster HTML/SVG là tùy chọn, chưa thực hiện.
 
-Quy tắc routing, hỏi lại, ngữ cảnh và xác nhận nằm trong system prompt. Mô tả tool và quy ước tham số nằm trong tools.yaml. V3 UI đã dùng cùng cấu hình được đo ở run `v3-final`; v1/v2 và bản v3 lịch sử được giữ nguyên để so sánh.
+## B6. Nhận xét và rút kinh nghiệm
 
-Bộ chấm đo tên tool và tham số, không bảo đảm nội dung nguồn luôn đúng hoặc API ngoài luôn thành công. Các sai khác query gần nghĩa và câu hỏi xác nhận cần được xem thủ công bên cạnh điểm tự động. Link demo phụ thuộc tiến trình local và tunnel. Thời điểm nộp/hoàn tất trước mốc 16:30 cần người nộp đối chiếu lịch lớp; báo cáo không tự xác nhận tiêu chí thời gian này.
+**Những sửa đổi thuộc system prompt:** quy tắc hỏi lại, xác nhận trước gửi, phân biệt nguồn web/X, giữ ngữ cảnh và sửa tham số qua nhiều lượt; bỏ ép một bước ở bản hoàn thiện. V1/v2 và v3 lịch sử được giữ nguyên để so sánh.
 
-## B7. Bonus
+**Những sửa đổi thuộc tools.yaml:** mô tả lúc dùng/không dùng, handle không có @, tin tức dùng topic=news, khoảng thời gian, Top/Latest và ranh giới dữ liệu demo của stock_quote. V3 UI dùng cùng prompt/tool với run v3-final; chỉ loại send khỏi các tool UI cho phép.
 
-- Đã hoàn thành thử thách unit test không skipped và sửa lỗi có regression test.
-- Chưa có bằng chứng gửi Telegram thật sau xác nhận; không nhận hoàn thành bonus này. UI không bật send.
-- Chưa làm Small Local Model Challenge: chưa chạy 2 model local và 2 vòng tối ưu local.
-- Có UI và 2 tool mới; **chưa đạt** bonus yêu cầu hơn 3 tool mới (ít nhất 4).
-- Poster HTML/SVG là tùy chọn, chưa làm; report Markdown là tài liệu nộp chính.
+**Những lỗi cần đánh giá thủ công:** R03 và M06 có query gần nghĩa nhưng bị chấm sai do yêu cầu giá trị cụ thể; R12 ở v3 lịch sử đã hỏi lại thay vì gửi nhưng dùng text thay cho yes_no. Cần xem hành vi thực tế bên cạnh điểm tự động. Bộ chấm định tuyến/tham số không bảo đảm chất lượng nội dung nguồn hoặc API ngoài luôn hoạt động.
 
-## B8. Kiểm tra nộp bài
+**Hướng cải thiện tiếp theo:** bổ sung case kiểm tra nội dung và nguồn trích dẫn, thử thêm câu hỏi ngoài bộ eval, tạo link triển khai ổn định và kiểm tra xác nhận Telegram qua phiên demo riêng. Không sửa bộ base để nâng điểm.
 
-- Có prompt/tool, version log v0–v3 và các run JSON thật.
-- Có 10 eval case đúng cơ cấu, tool mới và unit test xanh.
-- Có UI v1/v2/v3, tool mới dùng được ở v3, transcript và link public đã kiểm tra.
-- Không đưa .env hoặc API key vào bài nộp. Công cụ cloudflared được lưu ngoài repo.
-- Giữ máy chủ/tunnel chạy trong buổi demo; nếu khởi động tunnel mới phải cập nhật URL trong report.
+**Lưu ý nộp bài:** giữ máy chủ/tunnel chạy trong buổi demo và cập nhật URL nếu khởi động lại; không nộp .env hoặc API key. Người nộp tự đối chiếu thời hạn 16:30 theo lịch lớp; báo cáo không tự xác nhận tiêu chí thời gian này.
+
+## B7. Thử thách model nhỏ chạy cục bộ (bonus)
+
+Chưa thực hiện. Chưa chạy ít nhất 2 model local, chưa có 2 vòng tối ưu local và chưa kiểm tra ngược trên cloud. Vì chưa có bằng chứng nên không điền bảng điểm hoặc kết luận cho phần này.

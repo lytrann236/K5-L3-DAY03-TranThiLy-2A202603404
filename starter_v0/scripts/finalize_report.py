@@ -1,9 +1,12 @@
-"""Build the Vietnamese submission report from recorded, real run evidence."""
+"""Dựng report tiếng Việt theo mẫu chính thức, chỉ đọc bằng chứng đã có."""
 import csv
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+DEMO_URL = "https://groups-teams-veterinary-citysearch.trycloudflare.com"
+TEMPLATE_URL = "https://github.com/VinUni-AI20k/K5-L3-DAY03-ResearchAgentToolEval/blob/main/starter_v0/artifacts/REPORT.md"
 
 
 def latest(pattern):
@@ -18,37 +21,43 @@ def relative(path):
 def cell(value):
     if not isinstance(value, str):
         value = json.dumps(value, ensure_ascii=False)
-    return value.replace("|", "\\|").replace("\n", " ")
+    return value.replace("|", "\\|").replace("\n", " ").replace("\r", "")
+
+
+def brief_calls(calls):
+    """Rút gọn nội dung dài khi trình bày, không sửa lời gọi trong log gốc."""
+    items = []
+    for call in calls:
+        args = dict(call["args"])
+        if isinstance(args.get("text"), str) and len(args["text"]) > 100:
+            args["text"] = args["text"][:100] + "… [rút gọn; xem log gốc]"
+        items.append({"name": call["name"], "args": args})
+    return cell(items)
+
+
+def explain(failures):
+    translated = []
+    for failure in failures:
+        value = failure.replace("expected no tool call", "Yêu cầu không gọi tool nhưng agent vẫn gọi")
+        value = value.replace("missing tool call ", "Thiếu lời gọi ").replace("extra tool call ", "Thừa lời gọi ")
+        value = value.replace(": expected ", ": kỳ vọng ").replace(", got ", ", thực tế ")
+        translated.append(value)
+    return cell("; ".join(translated))
 
 
 def build():
+    historical = [latest(f"v{i}_B_base_gemini_*.json") for i in range(4)]
     base_path, base = latest("v3-final_B_base_gemini_*.json")
     group_path, group = latest("v3-final_B_group_gemini_*.json")
-    historical = [latest(f"v{i}_B_base_gemini_*.json") for i in range(4)]
-    log_path = ROOT / "artifacts/version_log.csv"
-    with log_path.open(encoding="utf-8-sig", newline="") as stream:
-        reader = csv.DictReader(stream)
-        fields, rows = reader.fieldnames, list(reader)
-    evidence = [(base_path, base, "0.7", "base"), (group_path, group, "1.0", "group")]
-    extra = sorted((ROOT / "runs").glob("v3-final-stock-demo_B_extension_gemini_*.json"))
-    if extra:
-        evidence.append((extra[-1], json.loads(extra[-1].read_text(encoding="utf-8")), "", "extension"))
-    for path, run, before, scope in evidence:
-        if not any(row["run_file"] == relative(path) for row in rows):
-            rows.append(dict(version=run["version"], author="nguyenthuyduong",
-                changed_artifact="system_prompt.md; tools.yaml; app.py; stock_quote",
-                artifact_version=run["artifact_version"], prompt_hash=run["prompt_hash"], tools_hash=run["tools_hash"],
-                reason=f"Hoàn thiện tích hợp; Gemini; suite={scope}",
-                hypothesis="Quy tắc routing và xác nhận rõ ràng cùng cấu hình UI thống nhất giúp sửa các lỗi còn lại; đây là vòng tích hợp sau v1-v3",
-                metric_before=before, metric_after=run["summary"]["case_accuracy"], run_file=relative(path)))
-    with log_path.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields)
-        writer.writeheader()
-        writer.writerows(rows)
-
-    transcript_path = sorted((ROOT / "transcripts").glob("ui_v3_gemini_*.transcript.json"))[-1]
+    stock_path, stock = latest("v3-final-stock-demo_B_extension_gemini_*.json")
+    with (ROOT / "artifacts/version_log.csv").open(encoding="utf-8-sig", newline="") as stream:
+        version_rows = {row["run_file"]: row for row in csv.DictReader(stream)}
+    transcript_path = ROOT / "transcripts/ui_v3_gemini_20261110T154007632059.transcript.json"
     transcript = json.loads(transcript_path.read_text(encoding="utf-8"))
-    text = """# Báo cáo Research Agent — Day 03 Lab v2
+    test_output = (ROOT / "artifacts/pytest-results.txt").read_text(encoding="utf-8-sig")
+    passed_tests = int(re.search(r"(\d+) passed", test_output).group(1))
+
+    text = """# Báo cáo Day 03 Lab v2 — Research Agent
 
 ## Thông tin nhóm
 
@@ -63,36 +72,38 @@ def build():
   | 3 | Nguyễn Thuỳ Dương | 2A202603388 |
   | 4 | Nguyễn Quỳnh Trang | 2A202603477 |
 
+---
+
 # PHẦN A — Giới thiệu agent
 
-## A1. Agent làm được gì và link dùng thử
+## A1. Agent này làm được gì
 
-Agent tìm tin tức web và bài đăng X, đọc URL, lọc các bài trùng URL và trình bày bản tin có nguồn. Khi thiếu thông tin, agent hỏi lại thay vì tự chọn một tài khoản hoặc bài viết.
+Agent tìm tin tức trên web và bài đăng X, đọc URL, loại bài trùng URL rồi trình bày thành bản tin có nguồn. Khi thiếu thông tin, agent hỏi lại thay vì tự chọn một tài khoản hoặc bài viết.
 
-**Link demo:** https://groups-teams-veterinary-citysearch.trycloudflare.com
+"""
+    text += f"**Link dùng thử (triển khai):** {DEMO_URL}\n\n"
+    text += """Đây là link tạm thời, phụ thuộc máy chủ Streamlit và tiến trình tunnel. Đã kiểm tra HTTP 200 và kết nối WebSocket khi triển khai; xem `UI-README.md` để khởi chạy lại.
 
-Đã kiểm tra trang chính và `/_stcore/health` qua link công khai: HTTP 200; kết nối WebSocket của Streamlit qua tunnel cũng thành công. Đây là link Cloudflare Tunnel tạm thời, chỉ hoạt động khi máy chủ Streamlit và tiến trình tunnel còn chạy. Link cục bộ: http://localhost:8501. Hướng dẫn khởi chạy lại: `UI-README.md`.
-
-UI chỉ có v1, v2, v3. V1 và v2 dùng cấu hình lịch sử; v3 dùng bản hoàn thiện với 12 tool khai báo. UI không cung cấp hành động gửi Telegram nên có 11 tool thực thi được từ lựa chọn v3. Transcript ghi nhãn `v3-final` và hash thực tế để phân biệt với v3 lịch sử.
-
-## A2. Các tool
+## A2. Tool agent có
 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
-| clarify | Hỏi thông tin còn thiếu hoặc xin xác nhận | không |
-| timeline | Lấy bài đăng gần đây của tài khoản X | không |
-| social_search | Tìm bài đăng X theo chủ đề, Top hoặc Latest | không |
-| lookup | Tìm web và tin tức theo khoảng thời gian | không |
-| fetch | Đọc nội dung một URL | không |
+| clarify | Hỏi lại khi thiếu thông tin hoặc cần xác nhận | không |
+| timeline | Lấy bài đăng gần đây của một tài khoản X | không |
+| social_search | Tìm bài đăng X theo chủ đề, mới nhất hoặc phổ biến | không |
+| lookup | Tìm thông tin và tin tức web theo khoảng thời gian | không |
+| fetch | Đọc nội dung một URL cụ thể | không |
 | format | Trình bày dữ liệu đã có thành bản tin | không |
-| send | Gửi Telegram khi có cấu hình và xác nhận; chỉ dùng qua CLI | không |
-| policy | Tìm chính sách nội bộ | không |
-| papers | Tìm bài báo arXiv | không |
-| paper_text | Trích văn bản bài báo arXiv | không |
-| deduplicate | Giữ bài đầu tiên cho mỗi URL trùng, giữ thứ tự | có |
-| stock_quote | Trả dữ liệu cổ phiếu minh họa cố định cho AAPL, NVDA, VHM; không phải giá hiện tại | có |
+| send | Gửi Telegram sau xác nhận; chỉ cung cấp qua CLI | không |
+| policy | Tìm trong chính sách nội bộ | không |
+| papers | Tìm bài báo khoa học trên arXiv | không |
+| paper_text | Trích văn bản từ bài báo arXiv | không |
+| deduplicate | Loại bài trùng URL, giữ bài đầu tiên và thứ tự | có |
+| stock_quote | Trả dữ liệu cổ phiếu minh họa cố định; không phải giá hiện tại | có |
 
-## A3. Câu hỏi mẫu
+UI chỉ có v1, v2, v3. V1/v2 dùng cấu hình lịch sử; v3 dùng bản hoàn thiện có tool mới. UI không bật `send`, nên v3 có 11 tool được cung cấp cho model.
+
+## A3. Câu hỏi mẫu để thử
 
 1. Lấy 2 bài mới nhất của karpathy.
 2. Tin AI hôm nay có gì nổi bật?
@@ -100,109 +111,120 @@ UI chỉ có v1, v2, v3. V1 và v2 dùng cấu hình lịch sử; v3 dùng bản
 4. Loại URL trùng, giữ bài đầu tiên: `[{"title":"A","url":"https://example.com/a"},{"title":"B","url":"https://example.com/a"}]`.
 5. Cho tôi dữ liệu cổ phiếu minh họa của mã AAPL, không cần giá hiện tại.
 
+---
+
 # PHẦN B — Chi tiết / Bằng chứng
 
-## B1. Phiên bản và kết quả thực tế
+## B1. Bằng chứng phiên bản
 
-V0–v3 lịch sử dùng cùng model Gemini. Mỗi vòng tối ưu v1–v3 kiểm chứng một giả thuyết; các bản gốc được giữ trong `artifacts/versions/`. Bản `v3-final` là vòng tích hợp nhiều sửa đổi sau đó, không thay thế hay viết lại kết quả lịch sử.
+Nguồn: `artifacts/version_log.csv` và `runs/*.json`. Chỉ tiêu trước/sau trong bảng là tỷ lệ case đúng. V0–v3 là chuỗi tối ưu Gemini lịch sử; `v3-final` là bản tích hợp được đo lại riêng, không thay thế số liệu cũ. UI chọn v3 nhưng transcript ghi `v3-final` và hash cấu hình thực tế.
 
-| Phiên bản | Thay đổi / giả thuyết | Điểm trước | Điểm sau | File bằng chứng |
-|---|---|---:|---:|---|
+| Phiên bản | File thay đổi | Giả thuyết | Chỉ số trước | Chỉ số sau | File kết quả chạy |
+|---|---|---|---:|---:|---|
 """
-    hypotheses = ["Baseline chưa tối ưu", "Hỏi lại khi thiếu handle/URL thay vì đoán", "Chỉ hỏi tài khoản khi đối tượng thiếu hoặc mơ hồ", "Yêu cầu xác nhận trước khi gửi"]
+    hypotheses = ["Đo chất lượng ban đầu", "Hỏi lại khi thiếu tài khoản/URL sẽ sửa R10, R11", "Phân biệt thiếu đối tượng với tên người rõ ràng sẽ giảm hỏi lại thừa", "Xin xác nhận trước gửi sẽ sửa R12"]
     for index, (path, run) in enumerate(historical):
-        before = "—" if index == 0 else f"{historical[index-1][1]['summary']['case_accuracy']:.0%}"
-        text += f"| v{index} | {hypotheses[index]} | {before} | {run['summary']['case_accuracy']:.0%} | `{relative(path)}` |\n"
-    text += f"| v3-final / base | Hoàn thiện routing, nhiều tool, xác nhận và UI | 70% | {base['summary']['case_accuracy']:.0%} | `{relative(base_path)}` |\n"
-    text += f"| v3-final / group | Kiểm tra lại cùng 10 case của nhóm | 100% | {group['summary']['case_accuracy']:.0%} | `{relative(group_path)}` |\n"
+        row = version_rows[relative(path)]
+        before = "—" if index == 0 else f"{float(row['metric_before']):.0%}"
+        changed = "Bản gốc" if index == 0 else "`artifacts/system_prompt.md`"
+        text += f"| v{index} | {changed} | {hypotheses[index]} | {before} | {run['summary']['case_accuracy']:.0%} | `{relative(path)}` |\n"
+    text += f"| v3-final / base | Prompt, khai báo tool, UI, stock_quote | Tích hợp quy tắc chọn tool, tham số và xác nhận để sửa các lỗi còn lại | 70% | {base['summary']['case_accuracy']:.0%} | `{relative(base_path)}` |\n"
+    text += f"| v3-final / nhóm | Cùng cấu hình hoàn thiện | Kiểm tra lại cùng 10 case nhóm với bộ tool mở rộng | 100% | {group['summary']['case_accuracy']:.0%} | `{relative(group_path)}` |\n"
     text += """
-Hash đầy đủ, tác giả, lý do và đường dẫn run được ghi trong `artifacts/version_log.csv`. Bộ base và bộ group là hai tập dữ liệu riêng; không dùng điểm group để thay cho điểm base. Các run OpenRouter được nhóm đóng góp vẫn giữ trong `runs/`, nhưng không trộn vào chuỗi so sánh Gemini này.
+V1 sửa R10/R11 nhưng gây hỏi lại quá mức nên tổng điểm giữ 55%; v2 đạt 65%; v3 lịch sử tránh gửi ngay nhưng R12 còn sai `response_type`, nên giả thuyết xác nhận chưa đạt ở vòng đó. Bản hoàn thiện sửa các vấn đề còn lại và có run riêng. Điểm base và điểm nhóm thuộc hai bộ dữ liệu khác nhau; không dùng điểm nhóm để thay thế điểm base. Run OpenRouter của nhóm được giữ riêng, không trộn với chuỗi Gemini.
 
-**Kết luận từng giả thuyết:** v1 sửa R10/R11 nhưng gây hỏi lại quá mức nên tổng điểm giữ 55%; v2 phục hồi các yêu cầu đã nêu rõ người, đạt 65%; v3 đã tránh gửi ngay nhưng R12 còn sai `response_type=text`, nên chưa chứng minh thành công giả thuyết xác nhận. Bản hoàn thiện được đo lại riêng, không suy diễn điểm từ các run trước.
+## B2. Phân tích lỗi
 
-## B2. Phân tích lỗi baseline v0
+Các dòng sau lấy từ `results[*].result.failures` của baseline Gemini v0. Giữ nguyên mã loại lỗi của bộ chấm; nội dung dài trong tham số `text` được rút gọn để bảng dễ đọc, xem đầy đủ trong run JSON gốc.
 
-Các dòng sau lấy trực tiếp từ `results` của baseline Gemini; giữ mã loại lỗi của bộ chấm.
-
-| Case | Loại lỗi | Lời gọi thực tế | Chi tiết sai | Hướng sửa |
+| Mã case | Loại lỗi | Lời gọi tool thực tế | Nội dung sai | Cách sửa |
 |---|---|---|---|---|
 """
-    fixes = {"wrong_tool": "Làm rõ routing, query theo chủ đề và yêu cầu nhiều nguồn", "out_of_scope": "Từ chối yêu cầu ngoài phạm vi, không gọi tool", "unnecessary_tool": "Trả lời câu hỏi năng lực trực tiếp", "missing_info": "Hỏi rõ đối tượng hoặc URL", "wrong_boundary": "Xin xác nhận trước gửi bằng yes_no"}
+    fixes = {"wrong_tool": "Làm rõ chọn nguồn/tool và query theo chủ đề", "out_of_scope": "Từ chối ngoài phạm vi, không gọi tool", "unnecessary_tool": "Trả lời năng lực trực tiếp", "missing_info": "Hỏi tài khoản hoặc URL còn thiếu", "wrong_boundary": "Xin xác nhận bằng yes_no trước gửi"}
     for case in historical[0][1]["results"]:
         result = case["result"]
         if not result["passed"]:
             kind = result["failure_type"]
-            text += f"| {case['id']} | {kind} | {cell(result['actual_tool_calls'])} | {cell('; '.join(result['failures']))} | {fixes.get(kind, 'Kiểm tra tham số')} |\n"
-    failures = [case["id"] for case in base["results"] if not case["result"]["passed"]]
-    text += "\nKết quả base mới nhất: " + ("không có case thất bại trong lần đo này." if not failures else ", ".join(failures)) + " Điểm một lần chạy không bảo đảm mọi câu hỏi thực tế đều đúng.\n"
+            text += f"| {case['id']} | {kind} | {brief_calls(result['actual_tool_calls'])} | {explain(result['failures'])} | {fixes.get(kind, 'Kiểm tra tham số')} |\n"
+    text += f"\nBản hoàn thiện đạt {base['summary']['passed_cases']}/{base['summary']['total_cases']} case base trong lần đo đã lưu. Kết quả này không bảo đảm mọi câu hỏi thực tế đều đúng.\n"
     text += """
 
-## B3. Bộ eval nhóm: 5 một lượt + 5 nhiều lượt
+## B3. Các case eval của nhóm
 
-`data/eval_group.json` có 10 case, đầy đủ `id`, `phase=B`, loại lỗi, đầu vào, kỳ vọng và `metadata.what_it_tests`. Giữ nguyên `data/eval_base.json`.
+`data/eval_group.json` có 10 case, gồm 5 một lượt và 5 nhiều lượt. Mỗi case có mã, pha B, loại lỗi, đầu vào, kỳ vọng và mục tiêu kiểm tra. Không sửa `data/eval_base.json`.
 
-| Case | Số lượt | Nội dung kiểm tra | Tool kỳ vọng | Kết quả |
-|---|---:|---|---|---|
+| Mã case | Nội dung kiểm tra | Tool/hành vi kỳ vọng | Kết quả |
+|---|---|---|---|
 """
-    descriptions = ["Loại URL trùng từ danh sách đã có", "Hỏi URL còn thiếu", "Đúng handle và giới hạn 2 bài", "Tìm bài X theo chủ đề, Top và giới hạn", "Định dạng bài đã cung cấp", "Sửa tài khoản và số bài qua nhiều lượt", "Giữ URL được bổ sung ở lượt trước", "Đổi Latest sang Top, giữ số lượng", "Lọc trùng danh sách từ lượt trước", "Đổi mẫu trình bày, giữ danh sách"]
+    descriptions = ["Một lượt: loại URL trùng từ danh sách có sẵn", "Một lượt: hỏi URL còn thiếu", "Một lượt: dùng đúng handle và giới hạn 2 bài", "Một lượt: tìm bài X phổ biến theo chủ đề", "Một lượt: định dạng bài đã cung cấp", "Nhiều lượt: sửa tài khoản và số bài", "Nhiều lượt: giữ URL đã được bổ sung", "Nhiều lượt: đổi cách sắp xếp và giữ số lượng", "Nhiều lượt: lọc trùng danh sách ở lượt trước", "Nhiều lượt: đổi mẫu trình bày, giữ dữ liệu"]
     dataset = json.loads((ROOT / "data/eval_group.json").read_text(encoding="utf-8"))
     results = {case["id"]: case["result"] for case in group["results"]}
     for case, description in zip(dataset["cases"], descriptions):
-        names = ", ".join(call["name"] for call in case["expect"]["tool_calls"])
-        text += f"| {case['id']} | {len(case.get('turns', [None]))} | {description} | {names} | {'Đạt' if results[case['id']]['passed'] else 'Chưa đạt'} |\n"
-    text += f"\nBằng chứng: `{relative(group_path)}`. Đạt {group['summary']['passed_cases']}/10, lỗi nhà cung cấp: {group['summary']['provider_error_cases']}.\n"
-    stock_runs = sorted((ROOT / "runs").glob("v3-final-stock-demo_B_extension_gemini_*.json"))
-    if stock_runs:
-        stock = json.loads(stock_runs[-1].read_text(encoding="utf-8"))
-        text += f"\nBổ sung riêng cho stock_quote: `data/eval_stock_quote.json`, kết quả {stock['summary']['passed_cases']}/{stock['summary']['total_cases']}; `{relative(stock_runs[-1])}`. Case này không làm thay đổi cơ cấu 10 case của bộ group.\n"
+        calls = case["expect"]["tool_calls"]
+        expected = "; ".join(f"{call['name']}({json.dumps(call['args'], ensure_ascii=False)})" for call in calls)
+        text += f"| {case['id']} | {description} | {cell(expected)} | {'Đạt' if results[case['id']]['passed'] else 'Chưa đạt'} |\n"
+    text += f"\nKết quả: {group['summary']['passed_cases']}/10, không lỗi nhà cung cấp. Bằng chứng: `{relative(group_path)}`.\n"
+    text += f"\nCase bổ sung riêng cho `stock_quote`: `data/eval_stock_quote.json`, đạt {stock['summary']['passed_cases']}/{stock['summary']['total_cases']}; bằng chứng `{relative(stock_path)}`. Case này không thay đổi cơ cấu 10 case nhóm.\n"
     text += """
 
-## B4. Bằng chứng hội thoại
+## B4. Bằng chứng chat trực tiếp
 
-Phiên UI mới nhất bên dưới dùng Gemini thật; thao tác được thực hiện tự động theo kịch bản qua Streamlit AppTest, không phải dữ liệu giả lập. Các transcript người dùng đã thử trước đó cũng được giữ trong `transcripts/`.
+Bảng dưới dùng phiên UI gọi Gemini thật qua Streamlit AppTest với 3 đầu vào theo kịch bản, không dùng phản hồi giả lập. Đây là kiểm tra tự động, không phải người nhập trực tiếp từng lượt. Nội dung yêu cầu được diễn giải lại bằng tiếng Việt vì đầu vào phiên này bị mất dấu khi truyền qua terminal Windows; giữ nguyên transcript gốc.
 
-| Lượt | Yêu cầu | Tool thực tế | Trạng thái |
-|---|---|---|---|
+| Lượt | Yêu cầu người dùng (diễn giải) | Lời gọi tool | Bằng chứng phiên bản | Kết quả |
+|---|---|---|---|---|
 """
+    requests = {1: "Tóm tắt bài viết nhưng chưa cung cấp URL", 2: "Bổ sung URL https://example.com", 3: "Loại bài trùng URL https://example.com/a trong danh sách A, B; giữ bài đầu tiên, không tìm kiếm"}
+    states = {"waiting_for_user": "Đã hỏi lại, chờ người dùng", "answered": "Đã trả lời", "provider_error": "Lỗi nhà cung cấp", "max_tool_rounds": "Chạm giới hạn vòng gọi tool"}
+    evidence = f"{transcript['version']}; prompt `{transcript['prompt_hash'][:12]}`; tools `{transcript['tools_hash'][:12]}`"
     for turn in transcript["turns"]:
         names = ", ".join(event["tool"] for event in turn.get("tool_events", [])) or "Không gọi tool"
-        text += f"| {turn['turn_index']} | {cell(turn['user'])} | {names} | {turn['status']} |\n"
-    text += f"\nBằng chứng UI: `{relative(transcript_path)}`. CLI có phiên 3 lượt thật tại `transcripts/v4-deduplicate_gemini_20261110T112423997480.transcript.json`. Phiên người dùng thử 4 lượt thành công: `transcripts/ui_gemini_20261110T122056694086.transcript.json`.\n"
+        text += f"| {turn['turn_index']} | {cell(requests.get(turn['turn_index'], turn['user']))} | {names} | {evidence} | {states.get(turn['status'], turn['status'])} |\n"
+    text += f"\nTranscript UI: `{relative(transcript_path)}`. Hash đầy đủ nằm trong file này.\n"
     text += """
+Các bằng chứng bổ sung:
 
-## B5. Tool mới, test và các lỗi đã sửa
+- CLI gọi API thật, 3 lượt: `transcripts/v4-deduplicate_gemini_20261110T112423997480.transcript.json`.
+- Phiên người dùng thử UI, 4 lượt thành công: `transcripts/ui_gemini_20261110T122056694086.transcript.json`. Phiên này thuộc cấu hình trước khi có nhãn `v3-final`.
 
-- `deduplicate`: chạy cục bộ; so URL chính xác sau khi bỏ khoảng trắng, giữ bài đầu tiên và thứ tự, không so nghĩa nội dung. Có TOOL.md đầy đủ, khai báo schema, đăng ký implementation, 14 test trong `test_deduplicate.py` và 3 test qua registry trong `test_tools_todo.py`.
-- `stock_quote`: dữ liệu **minh họa cố định**, không phải giá thị trường. TOOL.md đã đủ frontmatter. Kết quả có `is_demo=true`, `source=static_demo`, `as_of=null`. Đầu vào rỗng/sai kiểu trả error dict; mã không hỗ trợ không còn được gán giá mặc định. Có 3 test ban đầu và 7 trường hợp kiểm thử bổ sung.
-- Bộ chấm từng sắp xếp trực tiếp dictionary trong danh sách, gây TypeError; đã sửa dùng biểu diễn JSON xác định và giữ regression test.
-- Log tool có emoji/tiếng Việt gây UnicodeEncodeError trên console Windows cp1252; đã chuyển log chẩn đoán sang ASCII và thêm regression test. Transcript vẫn giữ Unicode.
-- UI có test đổi phiên bản, dùng đúng prompt/tool, giữ lịch sử đúng phạm vi, lưu transcript, reset và xử lý lỗi nhà cung cấp.
-- Kết quả kiểm thử hoàn thiện: **122 test đạt, 0 lỗi, 0 bỏ qua**. Các HTTP trong unit test đều giả lập; eval và demo riêng dùng API thật.
+## B5. Bằng chứng bonus
 
-## B6. Nhận xét và giới hạn
+| Bonus | File bằng chứng | Phần đã hoạt động | Giới hạn / quy tắc kiểm soát |
+|---|---|---|---|
+| send (Telegram) | `tests/test_tools_examples.py`, `tests/test_tools_todo.py` | Đã kiểm tra bằng HTTP giả lập việc không gửi khi thiếu xác nhận | Chưa có transcript gửi Telegram thật sau xác nhận; chưa nhận hoàn thành bonus này; UI không bật send |
+| arXiv/chính sách nội bộ | `tools/papers/`, `tools/paper_text/`, `tools/policy/`; test policy trong `tests/test_tools_todo.py` | Có tool và test tìm chính sách, lọc nội dung chỉ dẫn không đáng tin | Chưa có run demo arXiv thật được dẫn chứng trong báo cáo; không nhận hoàn thành bonus arXiv |
+| UI | `app.py`, `tests/test_streamlit_app.py`, `UI-README.md` và transcript ở B4 | Có chọn v1/v2/v3, lịch sử chat, xem tool, lưu/tải JSON; đã kiểm tra link public | Link phụ thuộc máy chủ và tunnel; v1/v2 là bản lịch sử |
+| Unit test tool | `artifacts/pytest-results.txt`, `tests/test_deduplicate.py`, `tests/test_stock_quote.py`, `tests/test_tools_todo.py` | Hoàn thành test TODO, không bỏ qua test; có test cho hai tool mới | Unit test dùng mạng giả lập; không thay thế kiểm tra API thật |
 
-Quy tắc routing, hỏi lại, ngữ cảnh và xác nhận nằm trong system prompt. Mô tả tool và quy ước tham số nằm trong tools.yaml. V3 UI đã dùng cùng cấu hình được đo ở run `v3-final`; v1/v2 và bản v3 lịch sử được giữ nguyên để so sánh.
-
-Bộ chấm đo tên tool và tham số, không bảo đảm nội dung nguồn luôn đúng hoặc API ngoài luôn thành công. Các sai khác query gần nghĩa và câu hỏi xác nhận cần được xem thủ công bên cạnh điểm tự động. Link demo phụ thuộc tiến trình local và tunnel. Thời điểm nộp/hoàn tất trước mốc 16:30 cần người nộp đối chiếu lịch lớp; báo cáo không tự xác nhận tiêu chí thời gian này.
-
-## B7. Bonus
-
-- Đã hoàn thành thử thách unit test không skipped và sửa lỗi có regression test.
-- Chưa có bằng chứng gửi Telegram thật sau xác nhận; không nhận hoàn thành bonus này. UI không bật send.
-- Chưa làm Small Local Model Challenge: chưa chạy 2 model local và 2 vòng tối ưu local.
-- Có UI và 2 tool mới; **chưa đạt** bonus yêu cầu hơn 3 tool mới (ít nhất 4).
-- Poster HTML/SVG là tùy chọn, chưa làm; report Markdown là tài liệu nộp chính.
-
-## B8. Kiểm tra nộp bài
-
-- Có prompt/tool, version log v0–v3 và các run JSON thật.
-- Có 10 eval case đúng cơ cấu, tool mới và unit test xanh.
-- Có UI v1/v2/v3, tool mới dùng được ở v3, transcript và link public đã kiểm tra.
-- Không đưa .env hoặc API key vào bài nộp. Công cụ cloudflared được lưu ngoài repo.
-- Giữ máy chủ/tunnel chạy trong buổi demo; nếu khởi động tunnel mới phải cập nhật URL trong report.
 """
+    text += f"Kết quả pytest đã lưu: **{passed_tests} test đạt, 0 lỗi, 0 bỏ qua** tại `artifacts/pytest-results.txt`.\n\n"
+    text += """Chi tiết kiểm thử và lỗi được phát hiện:
+
+- `deduplicate`: 14 trường hợp trong `test_deduplicate.py` và 3 test qua registry; kiểm tra lọc trùng, thứ tự, metadata, không sửa đầu vào và lỗi dữ liệu.
+- `stock_quote`: 3 test ban đầu và 7 trường hợp bổ sung. Phát hiện và sửa 2 vấn đề trong tool được nhóm thêm: đầu vào sai kiểu gây lỗi thay vì trả error dict; mã không hỗ trợ được trả giá mặc định. Kết quả nay có `is_demo=true`, `source=static_demo`, `as_of=null`, không giả làm giá thị trường.
+- Chưa ghi nhận lỗi mới trong các tool có sẵn của starter. Có 2 lỗi ở hạ tầng được sửa và giữ regression test: bộ chấm sắp xếp dictionary gây TypeError (`test_eval_normalization.py`), và log Unicode gây lỗi console Windows (`test_chat_encoding.py`). Không tính hai lỗi này thành lỗi của tool có sẵn.
+- Ví dụ lỗi unit test phát hiện mà eval định tuyến không phát hiện: model gọi đúng `stock_quote(symbol="UNKNOWN")` nhưng implementation cũ vẫn bịa giá mặc định; `test_unknown_symbol_does_not_invent_price` kiểm tra không được trả trường `price`.
+- Có UI và 2 tool mới, chưa đạt bonus yêu cầu hơn 3 tool mới. Poster HTML/SVG là tùy chọn, chưa thực hiện.
+
+## B6. Nhận xét và rút kinh nghiệm
+
+**Những sửa đổi thuộc system prompt:** quy tắc hỏi lại, xác nhận trước gửi, phân biệt nguồn web/X, giữ ngữ cảnh và sửa tham số qua nhiều lượt; bỏ ép một bước ở bản hoàn thiện. V1/v2 và v3 lịch sử được giữ nguyên để so sánh.
+
+**Những sửa đổi thuộc tools.yaml:** mô tả lúc dùng/không dùng, handle không có @, tin tức dùng topic=news, khoảng thời gian, Top/Latest và ranh giới dữ liệu demo của stock_quote. V3 UI dùng cùng prompt/tool với run v3-final; chỉ loại send khỏi các tool UI cho phép.
+
+**Những lỗi cần đánh giá thủ công:** R03 và M06 có query gần nghĩa nhưng bị chấm sai do yêu cầu giá trị cụ thể; R12 ở v3 lịch sử đã hỏi lại thay vì gửi nhưng dùng text thay cho yes_no. Cần xem hành vi thực tế bên cạnh điểm tự động. Bộ chấm định tuyến/tham số không bảo đảm chất lượng nội dung nguồn hoặc API ngoài luôn hoạt động.
+
+**Hướng cải thiện tiếp theo:** bổ sung case kiểm tra nội dung và nguồn trích dẫn, thử thêm câu hỏi ngoài bộ eval, tạo link triển khai ổn định và kiểm tra xác nhận Telegram qua phiên demo riêng. Không sửa bộ base để nâng điểm.
+
+**Lưu ý nộp bài:** giữ máy chủ/tunnel chạy trong buổi demo và cập nhật URL nếu khởi động lại; không nộp .env hoặc API key. Người nộp tự đối chiếu thời hạn 16:30 theo lịch lớp; báo cáo không tự xác nhận tiêu chí thời gian này.
+
+## B7. Thử thách model nhỏ chạy cục bộ (bonus)
+
+Chưa thực hiện. Chưa chạy ít nhất 2 model local, chưa có 2 vòng tối ưu local và chưa kiểm tra ngược trên cloud. Vì chưa có bằng chứng nên không điền bảng điểm hoặc kết luận cho phần này.
+"""
+    text += f"\nCấu trúc đối chiếu theo [mẫu báo cáo chính thức]({TEMPLATE_URL}); các phần mô tả và nhận xét được viết bằng tiếng Việt, giữ tên tool, mã lỗi và hash để đối chiếu log.\n"
     (ROOT / "artifacts/REPORT.md").write_text(text, encoding="utf-8")
-    print("Updated Vietnamese report and version log from actual evidence.")
+    print("Generated Vietnamese report following sections A1-A3 and B1-B7.")
 
 
 if __name__ == "__main__":
