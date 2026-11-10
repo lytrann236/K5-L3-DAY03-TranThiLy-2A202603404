@@ -91,3 +91,6 @@ Next: publish a demo URL, have a human try the conversation, and review remainin
 Not attempted. No local-model results are claimed.
 
 UI Windows encoding fix: tool diagnostics now use ASCII-safe output; transcript content remains Unicode. A cp1252-console regression test and a real Gemini UI turn passed. Launch Streamlit with python -X utf8.
+
+## Integration with shared main
+Merged shared main commit 40d802b, preserving its current prompt/tool descriptions and stock_quote implementation and tests, alongside deduplicate and the UI. Historical Gemini snapshots and their 70% v3 evidence remain separate from the OpenRouter results contributed on main. UI v1-v3 still selects the historical Gemini snapshots. Post-merge verification: 115 tests passed, no skipped tests.

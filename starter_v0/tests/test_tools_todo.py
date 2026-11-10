@@ -124,3 +124,19 @@ def test_deduplicate_failure_returns_error_dict():
     result = T['deduplicate']([{'url':'https://example.com'}, {'url':None}])
     assert result['error'] == 'ValueError'
     assert 'items' not in result
+
+def test_stock_quote_happy_path():
+    from tools.stock_quote.tool import stock_quote
+    res = stock_quote(symbol="AAPL")
+    assert res["status"] == "success"
+    assert res["symbol"] == "AAPL"
+
+def test_stock_quote_empty_symbol():
+    from tools.stock_quote.tool import stock_quote
+    res = stock_quote(symbol="")
+    assert "error" in res
+
+def test_stock_quote_lowercase_input():
+    from tools.stock_quote.tool import stock_quote
+    res = stock_quote(symbol="nvda")
+    assert res["symbol"] == "NVDA"
