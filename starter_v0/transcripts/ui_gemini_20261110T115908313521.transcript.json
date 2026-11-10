@@ -1,0 +1,83 @@
+{
+  "transcript_id": "ui_gemini_20261110T115908313521",
+  "version": "v4-deduplicate",
+  "artifact_version": "v4-deduplicate+p9cd528f6710f+t155c657d7dd1",
+  "prompt_hash": "9cd528f6710fd732228c42a2bed4d08dd3f64671fa8dda70c8b5ef3a5da09a49",
+  "tools_hash": "155c657d7dd1db13da30c124d1f83d3855fe46d4fa61652ac1f4b1cd92145f28",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "created_at": "2026-11-10T11:59:08",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "turns": [
+    {
+      "turn_index": 1,
+      "user": "T?m t?t b?i vi?t n?y gi?p m?nh.",
+      "started_at": "2026-11-10T11:59:08",
+      "model": "gemini-3.5-flash",
+      "enabled_tools": [
+        "deduplicate",
+        "clarify",
+        "timeline",
+        "social_search",
+        "lookup",
+        "fetch",
+        "format",
+        "policy",
+        "papers",
+        "paper_text"
+      ],
+      "status": "waiting_for_user",
+      "assistant_text": "Bạn vui lòng cung cấp đường dẫn (URL) hoặc nội dung bài viết cần tóm tắt.",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "clarify",
+              "args": {
+                "response_type": "text",
+                "question": "Bạn vui lòng cung cấp đường dẫn (URL) hoặc nội dung bài viết cần tóm tắt."
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "clarify",
+              "args": {
+                "response_type": "text",
+                "question": "Bạn vui lòng cung cấp đường dẫn (URL) hoặc nội dung bài viết cần tóm tắt."
+              },
+              "result": {
+                "tool": "ask_user",
+                "question": "Bạn vui lòng cung cấp đường dẫn (URL) hoặc nội dung bài viết cần tóm tắt.",
+                "response_type": "text",
+                "options": [],
+                "awaiting_user": true
+              }
+            }
+          ]
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "clarify",
+          "args": {
+            "response_type": "text",
+            "question": "Bạn vui lòng cung cấp đường dẫn (URL) hoặc nội dung bài viết cần tóm tắt."
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn vui lòng cung cấp đường dẫn (URL) hoặc nội dung bài viết cần tóm tắt.",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ],
+      "ended_at": "2026-11-10T11:59:11"
+    }
+  ],
+  "updated_at": "2026-11-10T11:59:11"
+}

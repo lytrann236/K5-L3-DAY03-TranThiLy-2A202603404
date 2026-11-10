@@ -1,0 +1,226 @@
+{
+  "transcript_id": "ui_gemini_20261110T120033286972",
+  "version": "v4-deduplicate",
+  "artifact_version": "v4-deduplicate+p9cd528f6710f+t155c657d7dd1",
+  "prompt_hash": "9cd528f6710fd732228c42a2bed4d08dd3f64671fa8dda70c8b5ef3a5da09a49",
+  "tools_hash": "155c657d7dd1db13da30c124d1f83d3855fe46d4fa61652ac1f4b1cd92145f28",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "created_at": "2026-11-10T12:00:33",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "turns": [
+    {
+      "turn_index": 1,
+      "user": "hôm nay ngày bao nhiêu",
+      "started_at": "2026-11-10T12:00:39",
+      "model": "gemini-3.5-flash",
+      "enabled_tools": [
+        "deduplicate",
+        "clarify",
+        "timeline",
+        "social_search",
+        "lookup",
+        "fetch",
+        "format",
+        "policy",
+        "papers",
+        "paper_text"
+      ],
+      "status": "answered",
+      "assistant_text": "Hôm nay là **Thứ Ba, ngày 10 tháng 11 năm 2026** (theo múi giờ quốc tế).",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "lookup",
+              "args": {
+                "query": "current date today"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "lookup",
+              "args": {
+                "query": "current date today"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "current date today",
+                "topic": "general",
+                "timeframe": "week",
+                "items": [
+                  {
+                    "title": "Today's Date | Current date now 📅",
+                    "url": "https://www.rapidtables.com/tools/todays-date.html",
+                    "source": "rapidtables.com",
+                    "summary": "Search  Share\n\nHome›Tools›Current date now\n\n# Today's Date Now\n\nToday's current date and time with time zone and date picker:\n\nThis page includes the following information:\n\n Today's date: day of week, month, day, year.\n Current time: hours, minutes, seconds.\n Time zone with location and GMT offset.\n Date picker of current date.\n Calendar chart.\n\n Current Time\n Online Clock\n Calendar\n Countdown Timer\n Stopwatch\n\n## Write how to improve this page\n\n##### ONLINE TOOLS [...] ##### RAPID TABLES\n\n Recommend Site\n Send Feedback\n About\n\nHome | Web | Math | Electricity | Calculators | Converters | Tools\n\n© RapidTables.com | About | Terms of Use | Privacy Policy | Cookie Settings;) [...] ##### ONLINE TOOLS\n\n Clock\n Bar graph maker\n Calendar\n Camera online\n Click counter\n Countdown Timer\n Current Time\n Line graph maker\n Online grocery list\n Microphone test\n Online Mirror\n Online Notepad\n Online Notes\n Password generator\n Pie chart maker\n Scatter plot maker\n Screen recorder\n Online screenshot\n Speech to text\n Stopwatch\n Text to speech\n Today's Date\n To-Do List\n Ruler (cm/mm) online\n Ruler (inch) online\n Voice recorder\n Webcam test\n\n##### RAPID TABLES",
+                    "score": 0.9113278082088873
+                  },
+                  {
+                    "title": "PostgreSQL - CURRENT_DATE Function - GeeksforGeeks",
+                    "url": "https://www.geeksforgeeks.org/postgresql/postgresql-current_date-function",
+                    "source": "geeksforgeeks.org",
+                    "summary": "The CURRENT\\_DATE function returns the current date of the database server.\n\n### Example 2: Find Today's Appointments\n\nQuery:\n\n```\nSELECT PatientName, DoctorName,  AppointmentDate FROM AppointmentsWHERE AppointmentDate = CURRENT_DATE;\n```\n\nOutput:\n\nScreenshot-2026-07-27-122124\n\n The query uses CURRENT\\_DATE to retrieve appointments scheduled for today.\n\nComment\n\n### Explore\n\nBasics [...] geeksforgeeks\n\nsearch icon\n\n Interview Prep\n\n DSA\n Practice Problems\n C\n C++\n Java\n Python\n JavaScript\n Data Science\n Machine Learning\n Courses\n Linux\n DevOps\n\n# PostgreSQL - CURRENT\\_DATE Function\n\nLast Updated : 1 Aug, 2026\n\nPostgreSQL CURRENT\\_DATE function returns the current date based on the database server's time zone. It is commonly used in SQL queries to work with today's date without requiring any input. [...] Provides the current date without the time component.\n Supports date filtering, comparisons, and calculations in SQL queries.\n\n### Syntax\n\n```\nSELECT CURRENT_DATE;\n```\n\nWhere:\n\n CURRENT\\_DATE: Returns the current date.\n\n## Examples\n\nConsider the following Appointments table for the examples below:\n\nScreenshot-2026-07-27-121726\n\nAppointments Table\n\n### Example 1: Display the Current Date\n\nQuery:\n\n```\nSELECT CURRENT_DATE;\n```\n\nOutput:\n\nScreenshot-2026-07-27-121932",
+                    "score": 0.9000786537565368
+                  },
+                  {
+                    "title": "What day of the year is it today?",
+                    "url": "https://www.datecalculator.org/day-of-the-year",
+                    "source": "datecalculator.org",
+                    "summary": "Date Calculator Logo\n\nDate Calculator  ›\n\nDate Tools  ›\n\nDays  ›\n\nDays of the year\n\n# What day of the year is it today?\n\nToday is  \n Mon 9th November 2026\n\n## Day 313\n\nShare on Facebook Tweet!\n\n## Day of the Year\n\nThe day of the year is 313. Day number of the year is 313.  \n Day number is indicating the number of the current (today's) day of the year.  \n Day of the year (DOY) number is between 1-365 or 1-366 according to if the current year is a leap year or not. [...] This year 2026 is a not leap year and there are 365 days.\n\nDay of the year date in ISO 8601 date format is 2026-11-09. Day name is Monday.\n\n### How many days have passed this year?\n\n313 days passed this year.\n\n### How many days into the year are we?\n\nThere are 52 days remaining in this year 2026 so far.\n\n  \n\n### Today's Date in Various Date Formats",
+                    "score": 0.8949131975151721
+                  },
+                  {
+                    "title": "Today's Date",
+                    "url": "https://www.calendardate.com/todays.htm",
+                    "source": "calendardate.com",
+                    "summary": "|  |\n\n| Current Season Today |\n| Autumn with 41 days until the start of Winter. |\n| S. Hemishpere flip seasons - i.e. Winter is Summer. |\n\n  \n\n|  |\n\n| Zodiac Signs and Birthday Symbols for Today's Date |\n| Zodiac Sign: | Scorpio |\n| Birthstone: | Topaz and Citrine |\n| Birth Flower: | Chrysanthemum |\n\n  \n\nUpcoming Holidays [...] |  |\n\n| Today's Date in Other Date Formats |\n| Unix Epoch: | 1794251860 |\n| ISO-8601: | 2026-11-10T00:47:40+05:30 |\n| RFC 2822: | Tue, 10 Nov 2026 00:47:40 +0530 |\n| DD-MM-YYYY: | 10-11-2026 |\n| MM-DD-YYYY: | 11-10-2026 |\n| YYYY-DD-MM: | 2026-10-11 |\n| YYYY-MM-DD: | 2026-11-10 |\n\n  \n\n|  |\n\n| Sun Today |\n| Sunrise: | 6:05 am |\n| Sunset: | 5:39 pm |\n\n  \n\n|  |\n\n| Moon Today |\n| Moonrise: | 6:53 am |\n| Moonset: | 6:25 pm |\n| Moonphase: | Third Quarter |\n| Visibility (illumination): | 49% | [...] # Today's Date\n\nToday's Date is Tuesday November 10, 2026\n\nTime zone: Tamil Nadu/Chennai\n\n|  |\n\n| November 2026 |\n| Sun | Mon | Tue | Wed | Thr | Fri | Sat |\n| 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n| 8 | 9 | 10 | 11 | 12 | 13 | 14 |\n| 15 | 16 | 17 | 18 | 19 | 20 | 21 |\n| 22 | 23 | 24 | 25 | 26 | 27 | 28 |\n| 29 | 30 |\n\n  \n\n|  |  |\n --- |\n| Day Number of Year: | 314 |\n| Week Number of Year: | 46 |\n| Month Number of Year: | 11 |\n| Leap Year: | No - Next is 2028 |\n| Daylight Saving Time: | No |\n\n  \n   \n\n|  |",
+                    "score": 0.8901935615122131
+                  },
+                  {
+                    "title": "isotropic.org > today's date",
+                    "url": "https://isotropic.org/date",
+                    "source": "isotropic.org",
+                    "summary": "# Today's Date\n\nIf this is working, then\n\n### Today is: [...] | Day of year: | Day 313 of 2026; 52 days remaining in the year |\n| Discordian: | Pungenday, The Aftermath 21, Year of Our Lady of Discord 3192 |",
+                    "score": 0.852697775375023
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Hôm nay là **Thứ Ba, ngày 10 tháng 11 năm 2026** (theo múi giờ quốc tế).",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "current date today"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "current date today",
+            "topic": "general",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Today's Date | Current date now 📅",
+                "url": "https://www.rapidtables.com/tools/todays-date.html",
+                "source": "rapidtables.com",
+                "summary": "Search  Share\n\nHome›Tools›Current date now\n\n# Today's Date Now\n\nToday's current date and time with time zone and date picker:\n\nThis page includes the following information:\n\n Today's date: day of week, month, day, year.\n Current time: hours, minutes, seconds.\n Time zone with location and GMT offset.\n Date picker of current date.\n Calendar chart.\n\n Current Time\n Online Clock\n Calendar\n Countdown Timer\n Stopwatch\n\n## Write how to improve this page\n\n##### ONLINE TOOLS [...] ##### RAPID TABLES\n\n Recommend Site\n Send Feedback\n About\n\nHome | Web | Math | Electricity | Calculators | Converters | Tools\n\n© RapidTables.com | About | Terms of Use | Privacy Policy | Cookie Settings;) [...] ##### ONLINE TOOLS\n\n Clock\n Bar graph maker\n Calendar\n Camera online\n Click counter\n Countdown Timer\n Current Time\n Line graph maker\n Online grocery list\n Microphone test\n Online Mirror\n Online Notepad\n Online Notes\n Password generator\n Pie chart maker\n Scatter plot maker\n Screen recorder\n Online screenshot\n Speech to text\n Stopwatch\n Text to speech\n Today's Date\n To-Do List\n Ruler (cm/mm) online\n Ruler (inch) online\n Voice recorder\n Webcam test\n\n##### RAPID TABLES",
+                "score": 0.9113278082088873
+              },
+              {
+                "title": "PostgreSQL - CURRENT_DATE Function - GeeksforGeeks",
+                "url": "https://www.geeksforgeeks.org/postgresql/postgresql-current_date-function",
+                "source": "geeksforgeeks.org",
+                "summary": "The CURRENT\\_DATE function returns the current date of the database server.\n\n### Example 2: Find Today's Appointments\n\nQuery:\n\n```\nSELECT PatientName, DoctorName,  AppointmentDate FROM AppointmentsWHERE AppointmentDate = CURRENT_DATE;\n```\n\nOutput:\n\nScreenshot-2026-07-27-122124\n\n The query uses CURRENT\\_DATE to retrieve appointments scheduled for today.\n\nComment\n\n### Explore\n\nBasics [...] geeksforgeeks\n\nsearch icon\n\n Interview Prep\n\n DSA\n Practice Problems\n C\n C++\n Java\n Python\n JavaScript\n Data Science\n Machine Learning\n Courses\n Linux\n DevOps\n\n# PostgreSQL - CURRENT\\_DATE Function\n\nLast Updated : 1 Aug, 2026\n\nPostgreSQL CURRENT\\_DATE function returns the current date based on the database server's time zone. It is commonly used in SQL queries to work with today's date without requiring any input. [...] Provides the current date without the time component.\n Supports date filtering, comparisons, and calculations in SQL queries.\n\n### Syntax\n\n```\nSELECT CURRENT_DATE;\n```\n\nWhere:\n\n CURRENT\\_DATE: Returns the current date.\n\n## Examples\n\nConsider the following Appointments table for the examples below:\n\nScreenshot-2026-07-27-121726\n\nAppointments Table\n\n### Example 1: Display the Current Date\n\nQuery:\n\n```\nSELECT CURRENT_DATE;\n```\n\nOutput:\n\nScreenshot-2026-07-27-121932",
+                "score": 0.9000786537565368
+              },
+              {
+                "title": "What day of the year is it today?",
+                "url": "https://www.datecalculator.org/day-of-the-year",
+                "source": "datecalculator.org",
+                "summary": "Date Calculator Logo\n\nDate Calculator  ›\n\nDate Tools  ›\n\nDays  ›\n\nDays of the year\n\n# What day of the year is it today?\n\nToday is  \n Mon 9th November 2026\n\n## Day 313\n\nShare on Facebook Tweet!\n\n## Day of the Year\n\nThe day of the year is 313. Day number of the year is 313.  \n Day number is indicating the number of the current (today's) day of the year.  \n Day of the year (DOY) number is between 1-365 or 1-366 according to if the current year is a leap year or not. [...] This year 2026 is a not leap year and there are 365 days.\n\nDay of the year date in ISO 8601 date format is 2026-11-09. Day name is Monday.\n\n### How many days have passed this year?\n\n313 days passed this year.\n\n### How many days into the year are we?\n\nThere are 52 days remaining in this year 2026 so far.\n\n  \n\n### Today's Date in Various Date Formats",
+                "score": 0.8949131975151721
+              },
+              {
+                "title": "Today's Date",
+                "url": "https://www.calendardate.com/todays.htm",
+                "source": "calendardate.com",
+                "summary": "|  |\n\n| Current Season Today |\n| Autumn with 41 days until the start of Winter. |\n| S. Hemishpere flip seasons - i.e. Winter is Summer. |\n\n  \n\n|  |\n\n| Zodiac Signs and Birthday Symbols for Today's Date |\n| Zodiac Sign: | Scorpio |\n| Birthstone: | Topaz and Citrine |\n| Birth Flower: | Chrysanthemum |\n\n  \n\nUpcoming Holidays [...] |  |\n\n| Today's Date in Other Date Formats |\n| Unix Epoch: | 1794251860 |\n| ISO-8601: | 2026-11-10T00:47:40+05:30 |\n| RFC 2822: | Tue, 10 Nov 2026 00:47:40 +0530 |\n| DD-MM-YYYY: | 10-11-2026 |\n| MM-DD-YYYY: | 11-10-2026 |\n| YYYY-DD-MM: | 2026-10-11 |\n| YYYY-MM-DD: | 2026-11-10 |\n\n  \n\n|  |\n\n| Sun Today |\n| Sunrise: | 6:05 am |\n| Sunset: | 5:39 pm |\n\n  \n\n|  |\n\n| Moon Today |\n| Moonrise: | 6:53 am |\n| Moonset: | 6:25 pm |\n| Moonphase: | Third Quarter |\n| Visibility (illumination): | 49% | [...] # Today's Date\n\nToday's Date is Tuesday November 10, 2026\n\nTime zone: Tamil Nadu/Chennai\n\n|  |\n\n| November 2026 |\n| Sun | Mon | Tue | Wed | Thr | Fri | Sat |\n| 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n| 8 | 9 | 10 | 11 | 12 | 13 | 14 |\n| 15 | 16 | 17 | 18 | 19 | 20 | 21 |\n| 22 | 23 | 24 | 25 | 26 | 27 | 28 |\n| 29 | 30 |\n\n  \n\n|  |  |\n --- |\n| Day Number of Year: | 314 |\n| Week Number of Year: | 46 |\n| Month Number of Year: | 11 |\n| Leap Year: | No - Next is 2028 |\n| Daylight Saving Time: | No |\n\n  \n   \n\n|  |",
+                "score": 0.8901935615122131
+              },
+              {
+                "title": "isotropic.org > today's date",
+                "url": "https://isotropic.org/date",
+                "source": "isotropic.org",
+                "summary": "# Today's Date\n\nIf this is working, then\n\n### Today is: [...] | Day of year: | Day 313 of 2026; 52 days remaining in the year |\n| Discordian: | Pungenday, The Aftermath 21, Year of Our Lady of Discord 3192 |",
+                "score": 0.852697775375023
+              }
+            ]
+          }
+        }
+      ],
+      "ended_at": "2026-11-10T12:00:48"
+    },
+    {
+      "turn_index": 2,
+      "user": "nhiệt đọ thời tiết hôm nay",
+      "started_at": "2026-11-10T12:02:20",
+      "model": "gemini-3.5-flash",
+      "enabled_tools": [
+        "deduplicate",
+        "clarify",
+        "timeline",
+        "social_search",
+        "lookup",
+        "fetch",
+        "format",
+        "policy",
+        "papers",
+        "paper_text"
+      ],
+      "status": "waiting_for_user",
+      "assistant_text": "Bạn muốn xem thông tin thời tiết ở tỉnh/thành phố nào (ví dụ: Hà Nội, TP.HCM, Đà Nẵng...)?",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "clarify",
+              "args": {
+                "response_type": "text",
+                "question": "Bạn muốn xem thông tin thời tiết ở tỉnh/thành phố nào (ví dụ: Hà Nội, TP.HCM, Đà Nẵng...)?"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "clarify",
+              "args": {
+                "response_type": "text",
+                "question": "Bạn muốn xem thông tin thời tiết ở tỉnh/thành phố nào (ví dụ: Hà Nội, TP.HCM, Đà Nẵng...)?"
+              },
+              "result": {
+                "tool": "ask_user",
+                "question": "Bạn muốn xem thông tin thời tiết ở tỉnh/thành phố nào (ví dụ: Hà Nội, TP.HCM, Đà Nẵng...)?",
+                "response_type": "text",
+                "options": [],
+                "awaiting_user": true
+              }
+            }
+          ]
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "clarify",
+          "args": {
+            "response_type": "text",
+            "question": "Bạn muốn xem thông tin thời tiết ở tỉnh/thành phố nào (ví dụ: Hà Nội, TP.HCM, Đà Nẵng...)?"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn muốn xem thông tin thời tiết ở tỉnh/thành phố nào (ví dụ: Hà Nội, TP.HCM, Đà Nẵng...)?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ],
+      "ended_at": "2026-11-10T12:02:26"
+    }
+  ],
+  "updated_at": "2026-11-10T12:02:26"
+}

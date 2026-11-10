@@ -1,0 +1,907 @@
+{
+  "run_id": "v4-deduplicate_B_group_gemini_20261110T112216163771",
+  "version": "v4-deduplicate",
+  "artifact_version": "v4-deduplicate+p9cd528f6710f+t155c657d7dd1",
+  "prompt_hash": "9cd528f6710fd732228c42a2bed4d08dd3f64671fa8dda70c8b5ef3a5da09a49",
+  "tools_hash": "155c657d7dd1db13da30c124d1f83d3855fe46d4fa61652ac1f4b1cd92145f28",
+  "phase": "B",
+  "suite": "group",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "system_prompt": "E:\\AI\\labday3\\K5-L3-DAY03-TranThiLy-2A202603404\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "E:\\AI\\labday3\\K5-L3-DAY03-TranThiLy-2A202603404\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day03_research_group",
+  "dataset_role": "group",
+  "description": "Team evaluation: 5 single-turn and 5 multi-turn cases covering routing, arguments, missing information, and URL deduplication.",
+  "generated_at": "2026-11-10T11:22:16",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_deduplicate_urls",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Routes supplied duplicate links to deduplicate and passes the original items without searching or formatting."
+      },
+      "input": "Remove duplicate URLs from these supplied articles, keeping the first item for each URL. Only deduplicate; do not search or format: [{\"title\":\"First\",\"url\":\"https://example.com/a\"},{\"title\":\"Duplicate\",\"url\":\"https://example.com/a\"},{\"title\":\"Second\",\"url\":\"https://example.com/b\"}]",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "deduplicate",
+            "args": {
+              "items": [
+                {
+                  "title": "First",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "title": "Duplicate",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "title": "Second",
+                  "url": "https://example.com/b"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "deduplicate",
+            "args": {
+              "items": [
+                {
+                  "title": "First",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "title": "Duplicate",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "url": "https://example.com/b",
+                  "title": "Second"
+                }
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "deduplicate",
+          "args": {
+            "items": [
+              {
+                "title": "First",
+                "url": "https://example.com/a"
+              },
+              {
+                "title": "Duplicate",
+                "url": "https://example.com/a"
+              },
+              {
+                "url": "https://example.com/b",
+                "title": "Second"
+              }
+            ]
+          },
+          "result": {
+            "tool": "deduplicate",
+            "items": [
+              {
+                "title": "First",
+                "url": "https://example.com/a"
+              },
+              {
+                "url": "https://example.com/b",
+                "title": "Second"
+              }
+            ],
+            "input_count": 3,
+            "item_count": 2,
+            "removed_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_missing_article_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Ask for a missing article URL instead of inventing one."
+      },
+      "input": "Please summarize this article for me.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text",
+              "question": "Please provide the URL or text of the article you would like me to summarize."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "response_type": "text",
+            "question": "Please provide the URL or text of the article you would like me to summarize."
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Please provide the URL or text of the article you would like me to summarize.",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_explicit_timeline",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Use the supplied handle and exact result limit."
+      },
+      "input": "Get the 2 latest posts from the X account karpathy.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 2
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 2
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "karpathy",
+            "limit": 2
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "karpathy",
+            "items": [
+              {
+                "title": "Earlier this week Tristan published his top YouTube channels:",
+                "summary": "Earlier this week Tristan published his top YouTube channels:\nhttps://t.co/NZ3UCNo6cT\nWhich looked excellent so clearly I had to turn it into TristanTube:\nhttps://t.co/l0KyW1WdNH\n47K super nerdy videos +TV mode for laid back watching. (One-shotted with Claude Code in 3 minutes)",
+                "url": "https://x.com/karpathy/status/2119114537442189652",
+                "source": "@karpathy",
+                "date": "Sat Nov 07 17:07:31 +0000 2026",
+                "metrics": {
+                  "favorites": 9164,
+                  "retweets": 771,
+                  "views": "938237"
+                }
+              },
+              {
+                "title": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 ",
+                "summary": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 years of HN to 6,454 videos that keep being recommended. *Significantly* better viewing experience, ~2 hours with Opus 5.5:\nhttps://t.co/JIhXN7OSh1\n\n- Excellent recs without any logins (state is kept in local browser session)\n- Thumbnail is a representative frame from middle of the video instead of the super duper A/B test hyper-optimized user uploads\n- Underlying data from the comment analysis as one zip file, point your Claude at it and ask for your own version\n- HackerTube Longs ✊\n\nA bit more on the process:\nI use Claude Code (desktop app for Mac), Opus 5.5 on Medium effort as my default. I only talk to Claude and have it do everything, the only \"manual work\" I helped with in tandem was in the browser (reminiscent of MenuGen): 1) I had to create some kind of API key from Google Cloud UI to query YouTube for video metadata, 2) I booted up a VPS box for serving and 3) I bought the domain name. Once the box was up I gave Claude the IP and told it update, secure, harden, deploy and optimize the code, and it did the whole thing.\n\nMany awesome projects that would have normally taken weeks/months even can now be few-shotted for breakfast. What else are we not thinking of.",
+                "url": "https://x.com/karpathy/status/2116957135661945283",
+                "source": "@karpathy",
+                "date": "Sun Nov 01 18:14:46 +0000 2026",
+                "metrics": {
+                  "favorites": 52338,
+                  "retweets": 4834,
+                  "views": "5715855"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_top_social_posts",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Route topic-based social research to social_search with Top."
+      },
+      "input": "Find 3 top popular posts about robotics on Twitter, not web articles.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "limit": 3,
+              "search_type": "Top",
+              "query": "robotics"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "limit": 3,
+            "search_type": "Top",
+            "query": "robotics"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "robotics",
+            "search_type": "Top",
+            "items": [
+              {
+                "title": "Learn robotics by playing games",
+                "summary": "Learn robotics by playing games\n\n1. Robot logic & loops\nhttps://t.co/0eDDkbvLZ3\n\n2. Program virtual robots\nhttps://t.co/roh76RTBxc\n\n3. Control theory\nhttps://t.co/rxLdTrmc5N\n\n4. Path planning (A*, Dijkstra)\nhttps://t.co/RjDVEPcXeL\n\n5. Inverse kinematics\nhttps://t.co/kq9W5xMrZP\n\n6. 3D rotations (quaternions)\nhttps://t.co/7jlTslBxPx\n\n7. Electronics, from one logic gate to a computer\nhttps://t.co/sjBNZ7f4aB\n\n8. Neural networks\nhttps://t.co/GA8svCS7Ud\n\n9. Robot battles in code\nhttps://t.co/EObDrwnDqz\n\n10. Google DeepMind's MuJoCo physics engine\nhttps://t.co/CWAMTCLKDq\n\nP.S. I built one too: drag a robot arm, tune a drone's controller and train a robot with RL, free in your browser\nhttps://t.co/qy17iRfFKA",
+                "url": "https://x.com/0x_meden/status/2119095784972939733",
+                "source": "@0x_meden",
+                "date": "Sat Nov 07 15:53:00 +0000 2026",
+                "metrics": {
+                  "favorites": 481,
+                  "retweets": 75,
+                  "views": "13769"
+                }
+              },
+              {
+                "title": "HE’S ON HIS KNEES BETWEEN HER LEGS AND NO ONE IS STOPPING HIM",
+                "summary": "HE’S ON HIS KNEES BETWEEN HER LEGS AND NO ONE IS STOPPING HIM\n\nA suited guy drops to his knees and starts running his hands up the inner thigh of a full-size female humanoid at AI Robotics USA 2026.\n\nShe’s in a white one-piece with her entire hip and leg mechanics on full display — and she just looks down at him, unbothered.\n\nCrowd’s filming. No one’s stopping it.\nStill calling this a “tech inspection”?",
+                "url": "https://x.com/oscarsaintrs/status/2119150191483977755",
+                "source": "@oscarsaintrs",
+                "date": "Sat Nov 07 19:29:12 +0000 2026",
+                "metrics": {
+                  "favorites": 81,
+                  "retweets": 6,
+                  "views": "96935"
+                }
+              },
+              {
+                "title": "Robots learning new tasks without task-specific robot demos? That's impressive. ",
+                "summary": "Robots learning new tasks without task-specific robot demos? That's impressive. \n\n@liberai_robot built Liber-0 to transfer human experience into robot skills.\n\n- Learns from human videos and glove-recorded motion.\n- Accounts for differences between human and robot movements.\n- Transfers skills to new manipulation tasks.\n\nAcross 60 tasks and 600 trials, Liber-0 achieved 36.0% overall success\nwithout robot demonstrations collected specifically for those tasks.\n\nHuman experience becoming transferable robot skills.",
+                "url": "https://x.com/Diptish09/status/2117955064899993709",
+                "source": "@Diptish09",
+                "date": "Wed Nov 04 12:20:11 +0000 2026",
+                "metrics": {
+                  "favorites": 289,
+                  "retweets": 67,
+                  "views": "63133"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_format_supplied_items",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Format supplied content without collecting more data."
+      },
+      "input": "Format these supplied items as bullets only, without searching or deduplicating: [{\"title\":\"Lab update\",\"url\":\"https://example.com/lab\",\"summary\":\"Evaluation is complete.\"}]",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets",
+              "items": [
+                {
+                  "title": "Lab update",
+                  "url": "https://example.com/lab",
+                  "summary": "Evaluation is complete."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "items": [
+                {
+                  "title": "Lab update",
+                  "url": "https://example.com/lab",
+                  "summary": "Evaluation is complete."
+                }
+              ],
+              "template": "bullets"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "format",
+          "args": {
+            "items": [
+              {
+                "title": "Lab update",
+                "url": "https://example.com/lab",
+                "summary": "Evaluation is complete."
+              }
+            ],
+            "template": "bullets"
+          },
+          "result": {
+            "tool": "render_digest",
+            "template": "bullets",
+            "markdown": "- Evaluation is complete. - [example.com](https://example.com/lab)",
+            "item_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_correct_account_and_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Apply the latest account and count corrections together."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Get 6 latest posts from sama."
+        },
+        {
+          "role": "user",
+          "content": "Correction: use karpathy instead."
+        },
+        {
+          "role": "user",
+          "content": "Only 2 posts, still from that corrected account."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 2
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 2
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "karpathy",
+            "limit": 2
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "karpathy",
+            "items": [
+              {
+                "title": "Earlier this week Tristan published his top YouTube channels:",
+                "summary": "Earlier this week Tristan published his top YouTube channels:\nhttps://t.co/NZ3UCNo6cT\nWhich looked excellent so clearly I had to turn it into TristanTube:\nhttps://t.co/l0KyW1WdNH\n47K super nerdy videos +TV mode for laid back watching. (One-shotted with Claude Code in 3 minutes)",
+                "url": "https://x.com/karpathy/status/2119114537442189652",
+                "source": "@karpathy",
+                "date": "Sat Nov 07 17:07:31 +0000 2026",
+                "metrics": {
+                  "favorites": 9164,
+                  "retweets": 771,
+                  "views": "938237"
+                }
+              },
+              {
+                "title": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 ",
+                "summary": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 years of HN to 6,454 videos that keep being recommended. *Significantly* better viewing experience, ~2 hours with Opus 5.5:\nhttps://t.co/JIhXN7OSh1\n\n- Excellent recs without any logins (state is kept in local browser session)\n- Thumbnail is a representative frame from middle of the video instead of the super duper A/B test hyper-optimized user uploads\n- Underlying data from the comment analysis as one zip file, point your Claude at it and ask for your own version\n- HackerTube Longs ✊\n\nA bit more on the process:\nI use Claude Code (desktop app for Mac), Opus 5.5 on Medium effort as my default. I only talk to Claude and have it do everything, the only \"manual work\" I helped with in tandem was in the browser (reminiscent of MenuGen): 1) I had to create some kind of API key from Google Cloud UI to query YouTube for video metadata, 2) I booted up a VPS box for serving and 3) I bought the domain name. Once the box was up I gave Claude the IP and told it update, secure, harden, deploy and optimize the code, and it did the whole thing.\n\nMany awesome projects that would have normally taken weeks/months even can now be few-shotted for breakfast. What else are we not thinking of.",
+                "url": "https://x.com/karpathy/status/2116957135661945283",
+                "source": "@karpathy",
+                "date": "Sun Nov 01 18:14:46 +0000 2026",
+                "metrics": {
+                  "favorites": 52338,
+                  "retweets": 4834,
+                  "views": "5715855"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_supply_url_after_clarification",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Carry forward a supplied URL into the final request."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Read the article I mentioned."
+        },
+        {
+          "role": "user",
+          "content": "The URL is https://example.com/research."
+        },
+        {
+          "role": "user",
+          "content": "Read only that exact URL; do not search the web."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/research"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/research"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com/research"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com/research",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com/research",
+                "source": "example.com",
+                "summary": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\nهذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n\n该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n\nL’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n\nДанный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n\nEste dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n\n [Learn more](https://iana.org/help/example-domains)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_switch_social_sort",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Change sorting while retaining count and social source."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Find 4 latest Twitter posts about robotics."
+        },
+        {
+          "role": "user",
+          "content": "Actually use popular Top posts instead of Latest."
+        },
+        {
+          "role": "user",
+          "content": "Keep the same topic and count."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top",
+              "limit": 4
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "robotics",
+              "limit": 4,
+              "search_type": "Top"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "robotics",
+            "limit": 4,
+            "search_type": "Top"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "robotics",
+            "search_type": "Top",
+            "items": [
+              {
+                "title": "Learn robotics by playing games",
+                "summary": "Learn robotics by playing games\n\n1. Robot logic & loops\nhttps://t.co/0eDDkbvLZ3\n\n2. Program virtual robots\nhttps://t.co/roh76RTBxc\n\n3. Control theory\nhttps://t.co/rxLdTrmc5N\n\n4. Path planning (A*, Dijkstra)\nhttps://t.co/RjDVEPcXeL\n\n5. Inverse kinematics\nhttps://t.co/kq9W5xMrZP\n\n6. 3D rotations (quaternions)\nhttps://t.co/7jlTslBxPx\n\n7. Electronics, from one logic gate to a computer\nhttps://t.co/sjBNZ7f4aB\n\n8. Neural networks\nhttps://t.co/GA8svCS7Ud\n\n9. Robot battles in code\nhttps://t.co/EObDrwnDqz\n\n10. Google DeepMind's MuJoCo physics engine\nhttps://t.co/CWAMTCLKDq\n\nP.S. I built one too: drag a robot arm, tune a drone's controller and train a robot with RL, free in your browser\nhttps://t.co/qy17iRfFKA",
+                "url": "https://x.com/0x_meden/status/2119095784972939733",
+                "source": "@0x_meden",
+                "date": "Sat Nov 07 15:53:00 +0000 2026",
+                "metrics": {
+                  "favorites": 481,
+                  "retweets": 75,
+                  "views": "13769"
+                }
+              },
+              {
+                "title": "The Princeton professor who also works as a research scientist at Google DeepMind is uploading an entire robotics course",
+                "summary": "The Princeton professor who also works as a research scientist at Google DeepMind is uploading an entire robotics course to YouTube this fall, and the full previous run is already online: 24 lectures, about 29 hours, free.\n\n\"Introduction to Robotics,\" Anirudha Majumdar (@Majumdar_Ani), Princeton.\n\nmotion planning and RRTs, quadrotor dynamics, PD control and LQR, Bayes, Kalman and particle filters, SLAM, optical flow, then deep learning and reinforcement learning for robots - 24 lectures, about 29 hours, free.\n\nthe homework includes flying a real Crazyflie drone, and the final project is to put a camera on it and train it to navigate by imitation learning, the same learn-from-demos idea robot brains like π0 are built on.\n\nthe Fall 2026 lectures go up every week: 11 are out, and lecture 1 already has 84K views.\n\nLectures (Fall 2026): https://t.co/fatvgSeR16\n\nSlides, notes and homework: https://t.co/Y8adt2clsf\n\nP.S. once you've got the basics, the article below is the 8-week path to building an Optimus-style robot brain at home.",
+                "url": "https://x.com/0x_meden/status/2118403040130564578",
+                "source": "@0x_meden",
+                "date": "Thu Nov 05 18:00:17 +0000 2026",
+                "metrics": {
+                  "favorites": 264,
+                  "retweets": 36,
+                  "views": "8519"
+                }
+              },
+              {
+                "title": "Learn the math behind robots by playing with it",
+                "summary": "Learn the math behind robots by playing with it\n\n1. Linear algebra\nhttps://t.co/TjOeVl0DHo\n\n2. Probability & Bayes\nhttps://t.co/YcxaXhop4x\n\n3. Markov chains\nhttps://t.co/qqAld0vHmc\n\n4. Kalman filters\nhttps://t.co/sUdZH1vor8\n\n5. Path planning (A*)\nhttps://t.co/HrxsvFxtUV\n\n6. Signals (Fourier transforms)\nhttps://t.co/OevtBZsEBS\n\n7. Optimization (gradient descent with momentum)\nhttps://t.co/e6EI19EzzB\n\n8. Reinforcement learning, by Andrej Karpathy\nhttps://t.co/n63sRGP8QM\n\n9. Transformers\nhttps://t.co/8jm8oh08eA\n\n10. Diffusion\nhttps://t.co/EGbK4Jn9bf\n\nP.S. the last two are the exact math inside π0 and GR00T: a transformer that understands the scene, and a diffusion-style head that turns noise into arm motion. the article below shows how",
+                "url": "https://x.com/0x_meden/status/2119507343348212198",
+                "source": "@0x_meden",
+                "date": "Sun Nov 08 19:08:23 +0000 2026",
+                "metrics": {
+                  "favorites": 999,
+                  "retweets": 176,
+                  "views": "36406"
+                }
+              },
+              {
+                "title": "This is a multi-billion dollar business",
+                "summary": "This is a multi-billion dollar business\n\nDusty robotics just invented a new tool that every single construction company will end up buying\n\nJust like a Roomba, it drives around, but it’s not cleaning, instead it’s printing the floor plan on to the slab. \n\nSo simple, so powerful https://t.co/csiB8YUWhI",
+                "url": "https://x.com/LinusEkenstam/status/1965014479760204118",
+                "source": "@LinusEkenstam",
+                "date": "Mon Sep 08 11:28:54 +0000 2025",
+                "metrics": {
+                  "favorites": 48637,
+                  "retweets": 4136,
+                  "views": "5005684"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_deduplicate_carry_items",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Route to the new tool using articles from earlier turns."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Here are my articles: [{\"title\":\"A\",\"url\":\"https://example.com/a\"},{\"title\":\"Copy\",\"url\":\"https://example.com/a\"}]."
+        },
+        {
+          "role": "user",
+          "content": "Remove duplicate URLs, keeping the first article."
+        },
+        {
+          "role": "user",
+          "content": "Use only the supplied list; no searching or formatting."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "deduplicate",
+            "args": {
+              "items": [
+                {
+                  "title": "A",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "title": "Copy",
+                  "url": "https://example.com/a"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "deduplicate",
+            "args": {
+              "items": [
+                {
+                  "url": "https://example.com/a",
+                  "title": "A"
+                },
+                {
+                  "url": "https://example.com/a",
+                  "title": "Copy"
+                }
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "deduplicate",
+          "args": {
+            "items": [
+              {
+                "url": "https://example.com/a",
+                "title": "A"
+              },
+              {
+                "url": "https://example.com/a",
+                "title": "Copy"
+              }
+            ]
+          },
+          "result": {
+            "tool": "deduplicate",
+            "items": [
+              {
+                "url": "https://example.com/a",
+                "title": "A"
+              }
+            ],
+            "input_count": 2,
+            "item_count": 1,
+            "removed_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_correct_digest_template",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Retain supplied items while applying the latest template correction."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Use these items: [{\"title\":\"Research\",\"url\":\"https://example.com/research\"}]. Format them as sections."
+        },
+        {
+          "role": "user",
+          "content": "Change the template to bullets."
+        },
+        {
+          "role": "user",
+          "content": "Keep only the supplied item and do not search."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets",
+              "items": [
+                {
+                  "title": "Research",
+                  "url": "https://example.com/research"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets",
+              "items": [
+                {
+                  "url": "https://example.com/research",
+                  "title": "Research"
+                }
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "format",
+          "args": {
+            "template": "bullets",
+            "items": [
+              {
+                "url": "https://example.com/research",
+                "title": "Research"
+              }
+            ]
+          },
+          "result": {
+            "tool": "render_digest",
+            "template": "bullets",
+            "markdown": "- Research - [example.com](https://example.com/research)",
+            "item_count": 1
+          }
+        }
+      ]
+    }
+  ]
+}

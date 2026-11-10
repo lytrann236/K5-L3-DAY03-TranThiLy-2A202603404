@@ -14,6 +14,23 @@
 #   - Make the `send` confirmation boundary explicit.
 #   - Declare your new tool(s) at the end of this file.
 tools:
+  - name: deduplicate
+    description: "Remove duplicate URLs from already-provided articles or posts before formatting a digest. Keep the first item per exact URL after trimming whitespace. Use only when deduplication is requested; does not search, fetch, or merge similar content."
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: "Existing articles or posts; every item must have a non-empty HTTP(S) URL."
+          items:
+            type: object
+            properties:
+              url: {type: string}
+              title: {type: string}
+              summary: {type: string}
+              source: {type: string}
+            required: [url]
+      required: [items]
   # ---------------- Core tools ----------------
   - name: clarify
     description: "Gửi một câu hỏi cho người dùng."

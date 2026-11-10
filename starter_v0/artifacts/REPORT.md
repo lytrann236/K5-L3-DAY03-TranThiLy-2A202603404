@@ -1,130 +1,93 @@
-# Day 03 Lab v2 Report — Research Agent
-
-> File này gồm 2 phần, deadline khác nhau:
-> - **PHẦN A — Giới thiệu agent**: ngắn gọn 1 trang để team khác hiểu nhanh agent có tool gì, làm được gì, thử bằng câu hỏi nào. **Xong trước 16:30** để làm tài liệu phụ trợ khi demo. Có thể làm thành poster HTML/SVG (`artifacts/poster.html` / `poster.svg`) để show cho team cùng zone.
-> - **PHẦN B — Chi tiết / Bằng chứng**: bảng đầy đủ (v0–v3, failure, eval, chat) dựa trên log thật. **Có thể hoàn thiện sau buổi debate để nộp bài.**
+# Research Agent ? Report
 
 ## Team
+- Working branch: nguyenthuyduong
+- Provider/model: Gemini / gemini-3.5-flash
+- Team membership: to be confirmed by the submitter.
 
-- Team:
-- Members:
-- Provider/model:
+# PH?N A ? Gi?i thi?u agent
 
----
+## A1. Capabilities
+Research assistant for web news, X posts, reading URLs, and formatting digests.
+The new deduplicate tool removes repeated URLs from supplied articles without an API key.
+UI: Streamlit app.py; local URL http://localhost:8501. Public demo URL: pending deployment. See UI-README.md for launch instructions.
 
-# PHẦN A — Giới thiệu agent
-
-## A1. Agent này làm được gì
-
-> 1–2 câu mô tả agent dùng để làm gì (cho team khác hiểu nhanh).
-
-Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc URL, tổng hợp thành digest, và gửi lên Telegram khi được xác nhận."
-
-**Link dùng thử (deploy):**
-
-> Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
->
-> URL: 
-
-## A2. Tool agent có
-
-> Liệt kê các tool agent đang dùng (gồm tool mới nhóm tự thêm). Mỗi tool 1 dòng: tên + làm được gì.
-
-| Tên tool | Làm được gì | Tool mới nhóm thêm? |
+## A2. Tools
+| Tool | Purpose | New |
 |---|---|---|
-| clarify | hỏi lại người dùng khi thiếu thông tin | không |
-|  |  |  |
-|  |  |  |
+| clarify | Ask for missing information or confirmation | No |
+| timeline | Read recent posts from a specified account | No |
+| social_search | Search social posts by topic | No |
+| lookup | Search the web and news | No |
+| fetch | Read a specific URL | No |
+| format | Format collected items as a digest | No |
+| deduplicate | Keep the first item per exact URL after trimming whitespace | Yes |
+| send | Telegram delivery; requires configuration and confirmation | No |
+| policy | Search local company policy | No |
+| papers | Search arXiv | No |
+| paper_text | Extract text from an arXiv paper | No |
 
-## A3. Câu hỏi mẫu để thử
+## A3. Example requests
+1. Get 2 latest posts from karpathy.
+2. Read https://example.com/research.
+3. Remove duplicate URLs: [{"url":"https://example.com/a"},{"url":"https://example.com/a"}].
+4. Format the supplied articles as bullets.
 
-> 3–5 câu hỏi/yêu cầu mẫu để team khác tự thử agent ngay.
+# PH?N B ? Chi ti?t / B?ng ch?ng
 
-1.
-2.
-3.
+## B1. Version evidence
+Source: artifacts/version_log.csv and runs/v0?v3 JSON files.
 
----
+| Version | Passed | Case accuracy | Tool routing | Multiturn |
+|---|---:|---:|---:|---:|
+| v0 | 11/20 | 55% | 65% | 83.33% |
+| v1 | 11/20 | 55% | 60% | 66.67% |
+| v2 | 13/20 | 65% | 75% | 83.33% |
+| v3 | 14/20 | 70% | 85% | 83.33% |
 
-# PHẦN B — Chi tiết / Bằng chứng
+- v1: replaced guessing with clarification. R10 and R11 passed, but over-clarification caused regressions for named people. Total accuracy remained 55%.
+- v2: distinguish absent/ambiguous targets from clearly identified people. Accuracy increased to 65%.
+- v3: require confirmation before delivery. R12 called clarify instead of send, but used text rather than yes_no. The target case still failed. Total 70% does not prove the confirmation hypothesis succeeded.
+- Adding deduplicate changes tools.yaml after v3. The group suite uses version v4-deduplicate; v3 base accuracy is not a measurement of the expanded tool set.
 
-## B1. Version Evidence
+## B2. Remaining v3 failures
+- R03_web_news_routing: wrong_tool; query: expected 'AI', got 'latest AI news highlights'
+- R08_out_of_scope: out_of_scope; expected no tool call
+- R09_no_tool_capability: unnecessary_tool; expected no tool call
+- R12_confirm_before_send: wrong_boundary; response_type: expected 'yes_no', got 'text'
+- R13_parallel_web_and_tweets: wrong_tool; query: expected 'AI', got 'AI news'; missing tool call social_search
+- M02_carryover_timeframe: wrong_arg_value; query: expected 'robotics', got 'robotics news'
 
-Fill from `artifacts/version_log.csv` and `runs/*.json`.
+## B3. Team eval
+10 cases in data/eval_group.json: exactly 5 single-turn and 5 multi-turn.
+Coverage: new-tool routing, missing URLs, exact limits, social sorting, supplied-item formatting, account corrections, URL carryover, sort corrections, item carryover, and template corrections.
+Results: 10/10 PASS (100% case, routing, argument, and multiturn accuracy); no provider errors. Evidence: runs/v4-deduplicate_B_group_gemini_20261110T112216163771.json. This is a separate group dataset and is not directly comparable to the 70% base score.
 
-| Version | Changed Artifact | Hypothesis | Metric Before | Metric After | Run File |
-|---|---|---|---:|---:|---|
-| v0 | baseline |  |  |  |  |
-| v1 |  |  |  |  |  |
-| v2 |  |  |  |  |  |
-| v3 |  |  |  |  |  |
+## B4. Live chat
+Real-API CLI demo with 3 scripted user inputs (not a human interactive session):
+Evidence: transcripts/v4-deduplicate_gemini_20261110T112423997480.transcript.json.
 
-## B2. Failure Analysis
-
-Use actual failures from `results[*].result.failures`.
-
-| Case ID | Failure Type | Actual Tool Calls | What Failed | Fix |
-|---|---|---|---|---|
-|  |  |  |  |  |
-
-## B3. Team Eval Cases
-
-List the 10 cases added to `data/eval_group.json` (5 single turn + 5 multi turn).
-
-| Case ID | What It Tests | Expected Tool/Behavior | Result |
+| Turn | Request | Actual tool | Status |
 |---|---|---|---|
-|  |  |  |  |
+| 1 | Summarize an article without a URL | clarify | waiting_for_user |
+| 2 | Supply https://example.com | fetch | answered |
+| 3 | Remove duplicate URLs from two articles | deduplicate | answered |
 
-## B4. Live Chat Evidence
+The demo used the real Gemini provider and real Firecrawl fetch, not mocked outputs. Automated UI interaction checks passed. Human demo rehearsal and public deployment remain to be completed.
 
-Use `transcripts/*.transcript.json`.
-
-| Turn | User Request | Tool Calls | Version Evidence | Outcome |
-|---|---|---|---|---|
-|  |  |  |  |  |
-
-## B5. Bonus Evidence
-
-Only fill if your team did bonus.
-
-| Bonus | Evidence File | What Worked | Risk / Guardrail |
-|---|---|---|---|
-| send (Telegram) |  |  |  |
-| arXiv/company policy |  |  |  |
-| UI |  |  |  |
-| Tool unit tests (`tests/`) | `pytest` output |  |  |
-
-Tool unit tests: số test đã viết, số bug tìm được trong tool có sẵn (nếu có), và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
+## B5. Implementation and unit tests
+- New tool: tools/deduplicate/tool.py with TOOL.md, registry entry, and schema.
+- 14 new tool test cases cover deduplication, metadata/order preservation, no input mutation, distinct URLs, empty input, and malformed input.
+- Found a harness bug: normalize_value attempted to sort dictionaries directly, raising TypeError for items arrays. Sort by a deterministic JSON representation instead, retaining the existing order-insensitive comparison convention. A regression test covers object-list comparison.
+- Latest offline test result: 104 passed, 0 skipped, 0 failed. All starter TODO tests are implemented with mocked HTTP and local policy input.
+- UI: app.py with chat history, model selection, tool-result inspection, reset, transcript persistence, and JSON download. Streamlit AppTest passed for chat, persistence, reset, and provider-error handling. Local server health check returned HTTP 200.
 
 ## B6. Reflection
+Missing-information and confirmation rules belong in the system prompt. Tool descriptions and argument conventions belong in tools.yaml.
+R12 needs manual review: requesting missing content via text avoids sending, but the automatic test expects yes_no. This distinction must remain visible rather than reporting it as a full success.
+Next: publish a demo URL, have a human try the conversation, and review remaining routing/argument failures.
 
-- Which fixes belonged in `system_prompt.md`?
-- Which fixes belonged in `tools.yaml`?
-- Which failure needed manual review instead of automatic grading?
-- What would you improve next?
+## B7. Small local model challenge
+Not attempted. No local-model results are claimed.
 
-## B7. Small Local Model Challenge (bonus)
-
-Only fill if your team did the local model challenge.
-
-| Version | Model (provider) | Prompt/Tools | case_accuracy | tool_routing | argument | multiturn | Run File |
-|---|---|---|---|---|---|---|---|
-| v3 | (cloud) | v3 |  |  |  |  |  |
-| v3-... | (ollama) | v3 |  |  |  |  |  |
-| v3-... | (ollama) | v3 |  |  |  |  |  |
-| v4-local |  |  |  |  |  |  |  |
-| v5-local |  |  |  |  |  |  |  |
-
-Lỗi đặc thù của model nhỏ (đếm từ run JSON):
-
-| Failure Pattern | Count | Example Case | Fix Tried | Helped? |
-|---|---|---|---|---|
-| wrong / hallucinated tool |  |  |  |  |
-| invalid JSON args (`_invalid_json_arguments`) |  |  |  |  |
-| no tool call / answered directly |  |  |  |  |
-| missed `clarify` |  |  |  |  |
-| repeated / unnecessary calls |  |  |  |  |
-
-- Cái gì giúp model nhỏ gọi tool đúng hơn nhất? Bằng chứng?
-- Bản prompt tối ưu cho local chạy trên model cloud thì sao?
-- Khi nào nhóm sẽ chọn model local thay vì cloud cho agent này?
+UI Windows encoding fix: tool diagnostics now use ASCII-safe output; transcript content remains Unicode. A cp1252-console regression test and a real Gemini UI turn passed. Launch Streamlit with python -X utf8.

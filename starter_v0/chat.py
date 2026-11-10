@@ -112,7 +112,9 @@ def run_model_tool_loop(
         non_clarification_events: list[dict[str, Any]] = []
 
         for call in calls:
-            print(f"🔧 {call.name}({json.dumps(call.args, ensure_ascii=False, sort_keys=True)})")
+            # Streamlit may inherit a Windows console encoding such as cp1252.
+            # Keep diagnostic output ASCII; transcripts preserve Unicode text.
+            print(f"Tool {call.name}({json.dumps(call.args, ensure_ascii=True, sort_keys=True)})")
             event = execute_tool_call(call)
             round_record["tool_results"].append(event)
             all_tool_events.append(event)

@@ -1,7 +1,309 @@
 {
-  "dataset_id": "day04_v2_research_group",
+  "dataset_id": "day03_research_group",
   "dataset_role": "group",
-  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "Team evaluation: 5 single-turn and 5 multi-turn cases covering routing, arguments, missing information, and URL deduplication.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_deduplicate_urls",
+      "phase": "B",
+      "query": "Remove duplicate URLs from these supplied articles, keeping the first item for each URL. Only deduplicate; do not search or format: [{\"title\":\"First\",\"url\":\"https://example.com/a\"},{\"title\":\"Duplicate\",\"url\":\"https://example.com/a\"},{\"title\":\"Second\",\"url\":\"https://example.com/b\"}]",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "deduplicate",
+            "args": {
+              "items": [
+                {
+                  "title": "First",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "title": "Duplicate",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "title": "Second",
+                  "url": "https://example.com/b"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Routes supplied duplicate links to deduplicate and passes the original items without searching or formatting."
+      }
+    },
+    {
+      "id": "G02_missing_article_url",
+      "phase": "B",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Ask for a missing article URL instead of inventing one."
+      },
+      "query": "Please summarize this article for me."
+    },
+    {
+      "id": "G03_explicit_timeline",
+      "phase": "B",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 2
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Use the supplied handle and exact result limit."
+      },
+      "query": "Get the 2 latest posts from the X account karpathy."
+    },
+    {
+      "id": "G04_top_social_posts",
+      "phase": "B",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Route topic-based social research to social_search with Top."
+      },
+      "query": "Find 3 top popular posts about robotics on Twitter, not web articles."
+    },
+    {
+      "id": "G05_format_supplied_items",
+      "phase": "B",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets",
+              "items": [
+                {
+                  "title": "Lab update",
+                  "url": "https://example.com/lab",
+                  "summary": "Evaluation is complete."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Format supplied content without collecting more data."
+      },
+      "query": "Format these supplied items as bullets only, without searching or deduplicating: [{\"title\":\"Lab update\",\"url\":\"https://example.com/lab\",\"summary\":\"Evaluation is complete.\"}]"
+    },
+    {
+      "id": "G06_correct_account_and_limit",
+      "phase": "B",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 2
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Apply the latest account and count corrections together."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Get 6 latest posts from sama."
+        },
+        {
+          "role": "user",
+          "content": "Correction: use karpathy instead."
+        },
+        {
+          "role": "user",
+          "content": "Only 2 posts, still from that corrected account."
+        }
+      ]
+    },
+    {
+      "id": "G07_supply_url_after_clarification",
+      "phase": "B",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/research"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Carry forward a supplied URL into the final request."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Read the article I mentioned."
+        },
+        {
+          "role": "user",
+          "content": "The URL is https://example.com/research."
+        },
+        {
+          "role": "user",
+          "content": "Read only that exact URL; do not search the web."
+        }
+      ]
+    },
+    {
+      "id": "G08_switch_social_sort",
+      "phase": "B",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top",
+              "limit": 4
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Change sorting while retaining count and social source."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Find 4 latest Twitter posts about robotics."
+        },
+        {
+          "role": "user",
+          "content": "Actually use popular Top posts instead of Latest."
+        },
+        {
+          "role": "user",
+          "content": "Keep the same topic and count."
+        }
+      ]
+    },
+    {
+      "id": "G09_deduplicate_carry_items",
+      "phase": "B",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "deduplicate",
+            "args": {
+              "items": [
+                {
+                  "title": "A",
+                  "url": "https://example.com/a"
+                },
+                {
+                  "title": "Copy",
+                  "url": "https://example.com/a"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Route to the new tool using articles from earlier turns."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Here are my articles: [{\"title\":\"A\",\"url\":\"https://example.com/a\"},{\"title\":\"Copy\",\"url\":\"https://example.com/a\"}]."
+        },
+        {
+          "role": "user",
+          "content": "Remove duplicate URLs, keeping the first article."
+        },
+        {
+          "role": "user",
+          "content": "Use only the supplied list; no searching or formatting."
+        }
+      ]
+    },
+    {
+      "id": "G10_correct_digest_template",
+      "phase": "B",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets",
+              "items": [
+                {
+                  "title": "Research",
+                  "url": "https://example.com/research"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Retain supplied items while applying the latest template correction."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Use these items: [{\"title\":\"Research\",\"url\":\"https://example.com/research\"}]. Format them as sections."
+        },
+        {
+          "role": "user",
+          "content": "Change the template to bullets."
+        },
+        {
+          "role": "user",
+          "content": "Keep only the supplied item and do not search."
+        }
+      ]
+    }
+  ]
 }
