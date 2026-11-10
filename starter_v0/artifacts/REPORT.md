@@ -135,7 +135,7 @@ Các bằng chứng bổ sung:
 
 Kết quả pytest đã lưu: **122 test đạt, 0 lỗi, 0 bỏ qua** tại `artifacts/pytest-results.txt`.
 
-Sau khi khôi phục dự án, đã tạo lại môi trường `.venv` và chạy lại toàn bộ test: 122 đạt, không lỗi, không bỏ qua. Preflight Gemini thật thành công với model `gemini-3.5-flash`. Hash prompt và khai báo tool khớp chính xác với hai run `v3-final` base/nhóm; `.gitattributes` cố định kiểu xuống dòng để giữ bằng chứng có thể đối chiếu sau khi checkout lại.
+Đã tạo môi trường `.venv` và chạy toàn bộ test: 122 đạt, không lỗi, không bỏ qua. Preflight Gemini thật thành công với model `gemini-3.5-flash`. Hash prompt và khai báo tool khớp chính xác với hai run `v3-final` base/nhóm; `.gitattributes` cố định kiểu xuống dòng để giữ bằng chứng có thể đối chiếu sau khi checkout lại.
 
 Chi tiết kiểm thử và lỗi được phát hiện:
 
