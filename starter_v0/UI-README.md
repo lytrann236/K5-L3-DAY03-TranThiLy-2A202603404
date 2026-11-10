@@ -1,11 +1,11 @@
 # Chạy giao diện Research Agent
 
-Từ thư mục `starter_v0`, kích hoạt môi trường và chạy:
+Từ thư mục `starter_v0`, tạo môi trường nếu chưa có rồi chạy trực tiếp Python của môi trường đó:
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python -X utf8 -m streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -X utf8 -m streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
 ```
 
 Mở http://localhost:8501. API key được đọc từ `.env` trên máy chủ.
@@ -42,9 +42,11 @@ Tunnel local có thể nhận URL mới khi khởi động lại và cần giữ
 ## Kiểm tra và bằng chứng
 
 ```powershell
-python -m pytest -q -p no:cacheprovider
-python -X utf8 run_eval.py --provider gemini --version v3-final --suite base --eval-cases data/eval_base.json
-python -X utf8 run_eval.py --provider gemini --version v3-final --suite group --eval-cases data/eval_group.json
+.\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider
+.\.venv\Scripts\python.exe -X utf8 run_eval.py --provider gemini --version v3-final --suite base --eval-cases data/eval_base.json
+.\.venv\Scripts\python.exe -X utf8 run_eval.py --provider gemini --version v3-final --suite group --eval-cases data/eval_group.json
 ```
 
 `scripts/finalize_report.py` dựng report từ log thật và dùng link Vercel trong biến `DEMO_URL`. Kết quả eval và demo Gemini dùng API thật; unit test và kiểm tra UI tự động thông thường dùng dữ liệu giả lập.
+
+File `.gitattributes` ở gốc repo cố định kiểu xuống dòng của prompt và tools.yaml để SHA-256 khớp bằng chứng đã lưu trên cả Windows và máy khác. Không sửa file run JSON để khớp một hash mới. Thư mục `.venv` và file `.env` chỉ dùng cục bộ, không đưa lên GitHub.

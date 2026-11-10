@@ -1,0 +1,3 @@
+# Preserve the exact artifact bytes referenced by recorded SHA-256 hashes.
+starter_v0/artifacts/system_prompt.md text eol=lf
+starter_v0/artifacts/tools.yaml text eol=crlf
